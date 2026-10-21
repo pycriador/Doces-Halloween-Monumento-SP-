@@ -37,11 +37,13 @@ textarea{width:100%;min-height:260px;font:14px/1.5 ui-monospace,Menlo,Consolas,m
 label{color:var(--mu);font-size:.9rem}
 details summary{cursor:pointer;color:var(--or);font-weight:600}
 .ok{color:#7ddc7d}
+input[type=text],input[type=number]{font:inherit;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:8px 14px}
+.riscado{text-decoration:line-through;opacity:.55}.chip{display:inline-block;background:#2b1d47;border-radius:999px;padding:4px 10px;margin:3px}.gh{margin:14px 0 4px;font-size:.95rem}
 @page{margin:12mm}
 @media print{
  :root{--bg:#fff;--card:#fff;--tx:#111;--mu:#555;--bd:#ccc;--or:#c25a00}
  body{background:#fff}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
- .noprint,#wpp{display:none!important}
+ .noprint,#wpp,#gestao{display:none!important}
  .card,.kpi{break-inside:avoid}.scroll{max-height:none;overflow:visible}
  .trilho{background:#eee}
 }
@@ -82,6 +84,23 @@ details summary{cursor:pointer;color:var(--or);font-weight:600}
   </div>
   <div class="scroll"><table id="tDados"></table></div>
  </section>
+ <section class="card" id="gestao">
+  <h2>🛠️ Lista pública (participantes.json)</h2>
+  <p class="sub" id="gFonte"></p>
+  <div class="tools noprint">
+   <input type="text" id="gTorre" maxlength="2" placeholder="Torre" style="width:90px">
+   <input type="number" id="gApto" min="1" placeholder="Apartamento" style="width:150px">
+   <button id="gAdd">➕ Adicionar</button>
+  </div>
+  <div id="gLista"></div><div id="gRem"></div>
+  <div class="tools" style="margin-top:14px">
+   <button id="gBaixar">⬇️ Baixar participantes.json</button>
+   <button class="sec" id="gCopiar">📋 Copiar JSON</button>
+   <label class="sec" style="cursor:pointer">📂 Importar JSON <input type="file" id="gArq" accept=".json,application/json" hidden></label>
+  </div>
+  <div><span id="gMsg" class="ok"></span> <span id="gStatus" class="sub"></span></div>
+  <p class="sub">Depois de baixar, suba o arquivo no GitHub (Add file → Upload files) com o nome <b>participantes.json</b>, substituindo o atual. Em ~1 minuto a tela pública atualiza.</p>
+ </section>
  <section class="card" id="wpp">
   <h2>💬 Lista de apartamentos para o WhatsApp</h2>
   <div class="tools">
@@ -94,6 +113,7 @@ details summary{cursor:pointer;color:var(--or);font-weight:600}
 </main>
 <script>
 const DADOS_BRUTOS = __DADOS__; // preenchido por tools/build.mjs
+let LISTA = __LISTA__;           // lista pública (participantes.json)
 
 const SEM_DOCES = __SEM_DOCES__;
 const CORES = ['#ff8a1f','#9d6bff','#7ddc3c','#ff5fa2','#2ec4b6','#ffd23f','#5aa9ff','#ff6b6b'];
@@ -148,13 +168,15 @@ function tabela(){
     l.map(d=>`<tr><td>${d.torre}</td><td>${d.apto}${d.entrega?'':' <small class="sub">(sem entrega de doces)</small>'}</td><td class="n">${d.criancas}</td><td>${fmtData(d.quando,true)}</td></tr>`).join('');
 }
 function whatsapp(){
-  const cri = $('oCriancas').checked, tot = $('oTotais').checked;
+  const cri = $('oCriancas').checked, tot = $('oTotais').checked, g = {};
+  LISTA.apartamentos.forEach(x=>(g[x.torre]=g[x.torre]||[]).push(x));
+  const ts = Object.keys(g).sort(); ts.forEach(t=>g[t].sort((a,b)=>a.apto-b.apto));
+  const kids = x => { const d = dados.find(d=>d.torre===x.torre&&d.apto===x.apto); return d ? d.criancas : null; };
+  const fmt = x => { const k = cri ? kids(x) : null, s = x.apto + (k===null ? '' : ` (${k})`); return x.acabou ? `~${s}~` : s; };
   let s = '🎃 *Coleta de Doces – Halloween 2026*\n🏢 Condomínio Monumento São Paulo\n';
-  if(tot) s += `\n✅ *${entregam.length} apartamentos participantes*\n🧒 ${soma(dados)} crianças no total\n`;
-  torres.forEach(t=>{
-    const l = entregam.filter(d=>d.torre===t); if(!l.length) return;
-    s += `\n*Torre ${t}* (${l.length} aptos.${tot?`, ${soma(dados.filter(d=>d.torre===t))} crianças`:''})\n` + l.map(d=>cri?`${d.apto} (${d.criancas})`:d.apto).join(', ') + '\n';
-  });
+  if(tot) s += `\n✅ *${LISTA.apartamentos.length} apartamentos participantes*\n🧒 ${soma(dados)} crianças no total\n`;
+  ts.forEach(t=>{ s += `\n*Torre ${t}* (${g[t].length} aptos.${tot?`, ${soma(dados.filter(d=>d.torre===t))} crianças`:''})\n` + g[t].map(fmt).join(', ') + '\n'; });
+  if(LISTA.apartamentos.some(x=>x.acabou)) s += '\n_Riscados: os doces já acabaram_\n';
   $('txtWpp').value = s.trim();
 }
 $('fTorre').onchange = $('fBusca').oninput = tabela;
@@ -208,11 +230,12 @@ function relatorioPDF(){
   garante(40+linhas.length*16); T('Resumo por torre',M,y-12,12,true); y-=28;
   linhas.forEach((l,i)=>{const b=i===0||i===linhas.length-1; l.forEach((v,k)=>T(v,M+xs[k],y-9,9,b,i===0?CIN:'0 0 0')); y-=16;}); y-=12;
   barrasPDF('cDistrib'); barrasPDF('cTop'); barrasPDF('cDia');
-  garante(60); T(`Apartamentos participantes que entregam doces (${entregam.length})`,M,y-12,12,true); y-=28;
-  torres.forEach(t=>{const l=entregam.filter(d=>d.torre===t); if(!l.length) return; const ls=quebra(l.map(d=>d.apto).join(', '),95);
-    garante(18+ls.length*13); T(`Torre ${t} - ${l.length} aptos., ${soma(dados.filter(d=>d.torre===t))} crianças na torre`,M,y-9,10,true,cor(t).length===7?rgbPdf('#8a4a00'):'0 0 0'); y-=15;
+  garante(60); T(`Apartamentos participantes (${LISTA.apartamentos.length})`,M,y-12,12,true); y-=28;
+  const gl={}; LISTA.apartamentos.forEach(x=>(gl[x.torre]=gl[x.torre]||[]).push(x));
+  Object.keys(gl).sort().forEach(t=>{const l=gl[t].sort((a,b)=>a.apto-b.apto), ls=quebra(l.map(x=>x.apto+(x.acabou?' (sem doces)':'')).join(', '),95);
+    garante(18+ls.length*13); T(`Torre ${t} - ${l.length} aptos., ${soma(dados.filter(d=>d.torre===t))} crianças na torre`,M,y-9,10,true,'0.54 0.29 0'); y-=15;
     ls.forEach(s=>{T(s,M,y-9,10); y-=13;}); y-=8;});
-  const sem=dados.filter(d=>!d.entrega); if(sem.length){garante(20); T('Sem entrega de doces no apartamento: '+sem.map(d=>d.apto+' '+d.torre).join(', '),M,y-9,9,false,CIN);}
+  const rem=LISTA.removidos||[]; if(rem.length){garante(20); T('Fora da lista: '+rem.map(r=>r.apto+' '+r.torre).join(', '),M,y-9,9,false,CIN);}
   pg.push(c); return montarPDF(pg);
 }
 async function exportarPDF(compartilhar){
@@ -228,7 +251,68 @@ async function exportarPDF(compartilhar){
   setTimeout(()=>msg.textContent='',6000);
 }
 $('bEnviar').onclick = () => window.open('https://wa.me/?text='+encodeURIComponent($('txtWpp').value),'_blank');
+/* ---------- Gestão da lista pública (participantes.json) ---------- */
+const gk = (t,a) => t+'|'+a;
+let gSujo = false;
+function gNorm(d){
+  if(!d || !Array.isArray(d.apartamentos)) throw new Error('JSON inválido');
+  const ap = d.apartamentos.map(x=>{ const t=String(x.torre).trim().toUpperCase(), a=Number(x.apto);
+    if(!/^[A-Z0-9]{1,3}$/.test(t) || !Number.isInteger(a) || a<1) throw new Error('Apartamento inválido no JSON');
+    return {torre:t,apto:a,acabou:!!x.acabou,origem:x.origem==='manual'?'manual':'planilha'}; });
+  const rm = (d.removidos||[]).map(x=>({torre:String(x.torre).trim().toUpperCase(),apto:Number(x.apto)}));
+  return {versao:1,atualizado:d.atualizado||null,editadoEm:d.editadoEm||null,apartamentos:ap,removidos:rm};
+}
+const gOrdena = () => LISTA.apartamentos.sort((a,b)=>a.torre.localeCompare(b.torre)||a.apto-b.apto);
+const gAcha = k => LISTA.apartamentos.find(x=>gk(x.torre,x.apto)===k);
+function gJson(){
+  gOrdena(); const l = o => ' '+JSON.stringify(o);
+  return `{"versao":1,"atualizado":${JSON.stringify(LISTA.atualizado||null)},"editadoEm":${JSON.stringify(fmtData(new Date(),true))},\n"apartamentos":[\n${LISTA.apartamentos.map(x=>l({torre:x.torre,apto:x.apto,acabou:!!x.acabou,origem:x.origem||'planilha'})).join(',\n')}\n],\n"removidos":[\n${(LISTA.removidos||[]).map(x=>l({torre:x.torre,apto:x.apto})).join(',\n')}\n]}\n`;
+}
+function gRender(){
+  gOrdena(); const g = {}; LISTA.apartamentos.forEach(x=>(g[x.torre]=g[x.torre]||[]).push(x));
+  $('gLista').innerHTML = Object.keys(g).sort().map(t=>`<h3 class="gh">Torre ${esc(t)} · ${g[t].length}</h3><table>` + g[t].map(x=>{const k=esc(gk(x.torre,x.apto));
+    return `<tr><td><span class="${x.acabou?'riscado':''}">${x.apto}</span></td><td class="sub">${x.acabou?'sem doces':'com doces'}${x.origem==='manual'?' · manual':''}</td><td class="n"><button class="sec" data-a="t" data-k="${k}">${x.acabou?'Voltou a ter doces':'Acabaram os doces'}</button> <button class="sec" data-a="d" data-k="${k}">🗑️ Excluir</button></td></tr>`;}).join('') + '</table>').join('') || '<p class="sub">Lista vazia.</p>';
+  const rm = LISTA.removidos||[];
+  $('gRem').innerHTML = rm.length ? '<h3 class="gh">Fora da lista (excluídos)</h3>' + rm.map(x=>`<span class="chip">${esc(x.torre)} ${x.apto} <button class="sec" data-a="r" data-k="${esc(gk(x.torre,x.apto))}">Restaurar</button></span>`).join(' ') : '';
+  $('gStatus').textContent = gSujo ? '⚠️ Alterações ainda não exportadas' : '';
+}
+$('gestao').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-a]'); if(!b) return;
+  const k = b.dataset.k, [t,a] = k.split('|'), ap = parseInt(a,10), x = gAcha(k);
+  if(b.dataset.a==='t'){ if(x) x.acabou = !x.acabou; }
+  else if(b.dataset.a==='d'){ if(!x || !confirm(`Excluir o apartamento ${ap} da Torre ${t}?`)) return;
+    LISTA.apartamentos = LISTA.apartamentos.filter(y=>y!==x); if(x.origem!=='manual') LISTA.removidos.push({torre:t,apto:ap}); }
+  else if(b.dataset.a==='r'){ LISTA.removidos = LISTA.removidos.filter(y=>gk(y.torre,y.apto)!==k); LISTA.apartamentos.push({torre:t,apto:ap,acabou:false,origem:'planilha'}); }
+  gSujo = true; gRender(); whatsapp();
+});
+$('gAdd').onclick = () => {
+  const t = $('gTorre').value.trim().toUpperCase(), a = parseInt($('gApto').value,10), m = $('gMsg');
+  if(!/^[A-Z0-9]{1,2}$/.test(t) || !(a>0)){ m.textContent = 'Informe a torre (ex.: A) e o apartamento.'; return; }
+  if(gAcha(gk(t,a))){ m.textContent = 'Esse apartamento já está na lista.'; return; }
+  LISTA.removidos = LISTA.removidos.filter(y=>gk(y.torre,y.apto)!==gk(t,a));
+  LISTA.apartamentos.push({torre:t,apto:a,acabou:false,origem:'manual'});
+  $('gApto').value = ''; m.textContent = '✔ Adicionado'; gSujo = true; gRender(); whatsapp();
+};
+$('gBaixar').onclick = () => {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([gJson()],{type:'application/json'})); a.download = 'participantes.json';
+  document.body.appendChild(a); a.click(); a.remove(); gSujo = false; gRender(); $('gMsg').textContent = '✔ Arquivo gerado. Suba no GitHub, substituindo participantes.json.';
+};
+$('gCopiar').onclick = async () => {
+  const s = gJson(); try{ await navigator.clipboard.writeText(s); }catch(e){ const ta = document.createElement('textarea'); ta.value = s; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  gSujo = false; gRender(); $('gMsg').textContent = '✔ JSON copiado.';
+};
+$('gArq').onchange = async e => {
+  const f = e.target.files[0]; if(!f) return;
+  try{ LISTA = gNorm(JSON.parse(await f.text())); gSujo = true; $('gFonte').textContent = 'Arquivo importado: '+f.name; gRender(); whatsapp(); $('gMsg').textContent = '✔ Importado'; }
+  catch(err){ $('gMsg').textContent = 'Arquivo inválido: '+err.message; }
+  e.target.value = '';
+};
+function gInit(){
+  LISTA = gNorm(LISTA); $('gFonte').textContent = 'Versão gerada a partir da planilha (embutida no painel).'; gRender();
+  try{ fetch('participantes.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(d=>{ if(gSujo) return; LISTA = gNorm(d); $('gFonte').textContent = 'Carregada do site publicado (participantes.json).'; gRender(); whatsapp(); }).catch(()=>{}); }catch(e){}
+}
 render();
+gInit();
 </script>
 </body>
 </html>

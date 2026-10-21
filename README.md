@@ -7,8 +7,8 @@ Painel da coleta de doces do condomínio, publicado com **GitHub Pages**:
 
 | Tela | Quem vê | O que mostra |
 |---|---|---|
-| **Pública** (`index.html`) | Todos | Botões por torre (A–F e "Todas"). Ao tocar, aparecem os apartamentos participantes da torre e a mensagem pronta para o WhatsApp (copiar ou abrir no WhatsApp). **Não mostra quantidade de crianças.** |
-| **Administração** | Só quem tem a chave | Todos os dashboards: indicadores, crianças e apartamentos por torre, distribuição, respostas por dia, maiores grupos, tabela de participantes, lista para WhatsApp com opções e exportação/compartilhamento de PDF. |
+| **Pública** (`index.html`) | Todos | Botões por torre (A–F e "Todas"). Ao tocar, aparecem os apartamentos participantes da torre e a mensagem pronta para o WhatsApp (copiar ou abrir no WhatsApp). Os apartamentos que **ficaram sem doces aparecem riscados** (e como `~riscado~` na mensagem). A lista vem do arquivo `participantes.json`. **Não mostra quantidade de crianças.** |
+| **Administração** | Só quem tem a chave | Todos os dashboards: indicadores, crianças e apartamentos por torre, distribuição, respostas por dia, maiores grupos, tabela de participantes, lista para WhatsApp com opções e exportação/compartilhamento de PDF e a **gestão da lista pública** (adicionar, marcar sem doces, excluir/restaurar e exportar o `participantes.json`). |
 
 Para entrar na Administração: toque em **🔒 Administração** no rodapé da tela pública e informe a chave.
 
@@ -19,7 +19,25 @@ Para entrar na Administração: toque em **🔒 Administração** no rodapé da 
 3. O apartamento é **normalizado sem a letra do bloco** (`55B`, `162 B`, `F 53` → `55`, `162`, `53`).
 4. **Quantidade de crianças em branco = 0** (o apartamento participa).
 5. **Duplicados** (mesmo apartamento + torre): vale a resposta mais recente.
-6. Apartamentos listados em `src/regras.json` (`semDoces`, formato `A231`) **não entregam doces**: contam as crianças, mas ficam fora das listas de apartamentos participantes.
+6. Apartamentos listados em `src/regras.json` (`semDoces`, formato `A231`) **não entregam doces**: contam as crianças, mas ficam fora da lista pública (entram em `removidos` na primeira geração; depois vale o `participantes.json`).
+
+## Lista pública: `participantes.json`
+
+A tela pública lê este arquivo a cada acesso (se não conseguir, usa a cópia embutida no `index.html`). Formato:
+
+```json
+{ "versao": 1, "atualizado": "21/10/2026 09:05", "editadoEm": null,
+  "apartamentos": [ { "torre": "A", "apto": 41, "acabou": false, "origem": "planilha" } ],
+  "removidos":    [ { "torre": "A", "apto": 231 } ] }
+```
+
+- `acabou: true` → o apartamento aparece **riscado** (os doces acabaram).
+- `origem: "manual"` → adicionado à mão (não veio da planilha).
+- `removidos` → apartamentos da planilha que ficaram de fora da lista (ex.: o 231 A, que não entrega doces).
+
+**Editar sem o Claude (por exemplo, se os créditos acabarem):** entre na Administração → **🛠️ Lista pública**, adicione apartamentos, marque *Acabaram os doces*, exclua ou restaure, toque em **⬇️ Baixar participantes.json** (ou **📋 Copiar JSON**) e suba no GitHub (**Add file → Upload files**, substituindo o arquivo; ou edite o arquivo e cole o JSON). Em cerca de 1 minuto a tela pública atualiza. Também dá para editar o JSON direto no GitHub.
+
+**Ao receber uma nova planilha**, o Claude regenera o arquivo **preservando suas edições**: mantém `acabou`, os apartamentos `manual` e os `removidos` do `participantes.json` atual.
 
 ## Como a Administração é protegida
 
@@ -50,8 +68,9 @@ SEGREDO='sua-chave-aqui' node tools/build.mjs decrypt > admin.html
 ```bash
 pip install pandas openpyxl
 python3 tools/xlsx_para_json.py planilha.xlsx /tmp/rows.json   # Excel -> JSON (fora do repositório)
-node tools/build.mjs build /tmp/rows.json                       # gera index.html aplicando as regras
-git add index.html && git commit -m "Atualiza dados" && git push
+curl -sL https://raw.githubusercontent.com/pycriador/Doces-Halloween-Monumento-SP-/main/participantes.json -o /tmp/atual.json
+node tools/build.mjs build /tmp/rows.json /tmp/atual.json       # gera index.html + participantes.json (preserva edições manuais)
+git add index.html participantes.json && git commit -m "Atualiza dados" && git push
 ```
 
 Basta enviar o novo Excel ao Claude: ele aplica as regras e publica (precisa de um token do GitHub do repositório).
@@ -60,11 +79,12 @@ Basta enviar o novo Excel ao Claude: ele aplica as regras e publica (precisa de 
 
 ```
 index.html                 # página publicada (pública + Administração criptografada)
+participantes.json         # lista pública (lida pela tela pública; editável pela Administração)
 keystore.json              # chave pública + chave privada CIFRADA (sem o segredo é inútil)
 src/public.template.html   # modelo da tela pública e do login
 src/admin.template.html    # modelo da Administração (sem dados)
 src/limpar.js              # regras de limpeza
-src/regras.json            # apartamentos que não entregam doces
+src/regras.json            # apartamentos que não entregam doces (semente inicial de `removidos`)
 tools/build.mjs            # init | build | decrypt
 tools/xlsx_para_json.py    # Excel -> JSON
 ```

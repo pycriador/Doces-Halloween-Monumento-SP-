@@ -19,7 +19,7 @@ button{cursor:pointer}.torres button{font-weight:700;font-size:1.05rem}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.chip{background:#2b1d47;border-radius:999px;padding:4px 14px;font-weight:600}
 textarea{width:100%;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;background:#150d26;color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:10px;margin:6px 0 10px}
 label{color:var(--mu);font-size:.9rem}.acoes{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.ok{color:#7ddc7d}.erro{color:#ff7b7b;margin-top:10px}.rodape{text-align:center;margin-top:28px;font-size:.9rem}
+.riscado{text-decoration:line-through;opacity:.5}.ok{color:#7ddc7d}.erro{color:#ff7b7b;margin-top:10px}.rodape{text-align:center;margin-top:28px;font-size:.9rem}
 a{color:var(--mu)}#fLogin input[type=password],#fLogin input[type=text]{width:100%;margin-bottom:10px}
 </style>
 </head>
@@ -49,22 +49,31 @@ a{color:var(--mu)}#fLogin input[type=password],#fLogin input[type=text]{width:10
 <script type="application/json" id="pl">__PL__</script>
 <script>
 (()=>{
-const P = __PUBLICO__, $ = id => document.getElementById(id), T = Object.keys(P.torres);
-$('at').textContent = P.atualizado;
+const P0 = __PUBLICO__, $ = id => document.getElementById(id);
+let P = {}, T = [], sel = null;
 const cab = '🎃 *Coleta de Doces – Halloween 2026*\n🏢 Condomínio Monumento São Paulo\n';
 const n = q => q + (q === 1 ? ' apartamento participante' : ' apartamentos participantes');
-const bloco = t => `*Torre ${t}* (${n(P.torres[t].length)})\n${P.torres[t].join(', ')}`;
-const total = T.reduce((s,t)=>s+P.torres[t].length,0);
-const msg = t => t === '*' ? `${cab}\n✅ *${n(total)}*\n\n` + T.map(bloco).join('\n\n') : `${cab}\n${bloco(t)}`;
-$('bts').innerHTML = [...T,'*'].map(t=>`<button data-t="${t}">${t==='*'?'Todas':'Torre '+t}</button>`).join('');
-$('bts').onclick = e => {
-  const t = e.target.dataset && e.target.dataset.t; if(!t) return;
-  [...$('bts').children].forEach(b=>b.classList.toggle('on',b.dataset.t===t));
-  $('rTit').textContent = t==='*' ? `Todas as torres · ${n(total)}` : `Torre ${t} · ${n(P.torres[t].length)}`;
-  $('rChips').innerHTML = t==='*' ? '' : P.torres[t].map(a=>`<span class="chip">${a}</span>`).join('');
+const num = x => x.acabou ? `~${x.apto}~` : String(x.apto);               // ~riscado~ no WhatsApp
+const bloco = t => `*Torre ${t}* (${n(P[t].length)})\n${P[t].map(num).join(', ')}`;
+const todos = () => T.reduce((a,t)=>a.concat(P[t]),[]);
+const legenda = l => l.some(x=>x.acabou) ? '\n\n_Riscados: os doces já acabaram_' : '';
+const msg = t => t === '*' ? `${cab}\n✅ *${n(todos().length)}*\n\n` + T.map(bloco).join('\n\n') + legenda(todos()) : `${cab}\n${bloco(t)}` + legenda(P[t]);
+function mostrar(t){
+  sel = t; [...$('bts').children].forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  const l = t==='*' ? todos() : P[t], k = l.filter(x=>x.acabou).length;
+  $('rTit').textContent = (t==='*' ? 'Todas as torres' : `Torre ${t}`) + ` · ${n(l.length)}` + (k ? ` · ${k} sem doces` : '');
+  $('rChips').innerHTML = t==='*' ? '' : l.map(x=>`<span class="chip${x.acabou?' riscado':''}">${x.apto}</span>`).join('') + (k ? '<div class="sub" style="width:100%">Riscados: os doces já acabaram.</div>' : '');
   $('rMsg').value = msg(t); $('res').hidden = false; $('rOk').textContent = '';
-  $('res').scrollIntoView({behavior:'smooth',block:'nearest'});
-};
+}
+function iniciar(d){
+  P = {}; d.apartamentos.slice().sort((a,b)=>a.torre.localeCompare(b.torre)||a.apto-b.apto).forEach(x=>(P[x.torre]=P[x.torre]||[]).push(x));
+  T = Object.keys(P); $('at').textContent = d.editadoEm || d.atualizado;
+  $('bts').innerHTML = [...T,'*'].map(t=>`<button data-t="${t}">${t==='*'?'Todas':'Torre '+t}</button>`).join('');
+  if(sel && (sel==='*' || P[sel])) mostrar(sel); else { sel = null; $('res').hidden = true; }
+}
+$('bts').onclick = e => { const t = e.target.dataset && e.target.dataset.t; if(!t) return; mostrar(t); $('res').scrollIntoView({behavior:'smooth',block:'nearest'}); };
+iniciar(P0);   /* versão embutida; em seguida carrega a lista publicada (participantes.json), que pode ter sido editada à mão */
+try{ fetch('participantes.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(d=>{ if(d && Array.isArray(d.apartamentos)) iniciar(d); }).catch(()=>{}); }catch(e){}
 $('bCop').onclick = async () => {
   try{ await navigator.clipboard.writeText($('rMsg').value); }catch(e){ $('rMsg').select(); document.execCommand('copy'); }
   $('rOk').textContent = '✔ Copiado!'; setTimeout(()=>$('rOk').textContent='',3000);
