@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Administração – Coleta de Doces Halloween 2026</title>
+<style>
+:root{--bg:#120b1f;--card:#1e1433;--tx:#f4eefc;--mu:#a99bc4;--bd:#32244f;--or:#ff8a1f}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:radial-gradient(circle at top,#2a1450,var(--bg) 55%) fixed;color:var(--tx)}
+header,main{max-width:1100px;margin:0 auto;padding:16px}
+header{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
+h1{margin:0;font-size:1.6rem}h1 span{color:var(--or)}
+.sub{color:var(--mu);font-size:.9rem}
+h2{margin:0 0 12px;font-size:1rem;color:var(--or)}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+button,select,input[type=search]{font:inherit;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:8px 14px}
+button{cursor:pointer;background:var(--or);color:#1a0d00;font-weight:600;border:0}
+button.sec{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.kpi{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px}
+.kpi b{display:block;font-size:1.9rem;line-height:1.1;color:var(--or)}
+.kpi small{color:var(--mu)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.bar{display:grid;grid-template-columns:92px 1fr 44px;gap:8px;align-items:center;margin:6px 0;font-size:.9rem}
+.bar .rot{color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar b{text-align:right}
+.trilho{background:#2b1d47;border-radius:8px;height:16px;overflow:hidden}
+.fill{height:100%;border-radius:8px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{padding:6px 8px;text-align:left;border-bottom:1px solid var(--bd)}
+th{color:var(--mu);font-weight:600}td.n,th.n{text-align:right}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.scroll{max-height:420px;overflow:auto}
+textarea{width:100%;min-height:260px;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;background:#150d26;color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:10px}
+label{color:var(--mu);font-size:.9rem}
+details summary{cursor:pointer;color:var(--or);font-weight:600}
+.ok{color:#7ddc7d}
+@page{margin:12mm}
+@media print{
+ :root{--bg:#fff;--card:#fff;--tx:#111;--mu:#555;--bd:#ccc;--or:#c25a00}
+ body{background:#fff}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .noprint,#wpp{display:none!important}
+ .card,.kpi{break-inside:avoid}.scroll{max-height:none;overflow:visible}
+ .trilho{background:#eee}
+}
+</style>
+</head>
+<body>
+<header>
+ <div>
+  <h1>🎃 Coleta de Doces <span>Halloween 2026</span></h1>
+  <div class="sub">Condomínio Monumento São Paulo · Atualizado em <span id="atualizado"></span></div>
+ </div>
+ <div class="btns noprint" style="align-items:center">
+  <button onclick="exportarPDF(true)">📤 Compartilhar PDF</button>
+  <button class="sec" onclick="exportarPDF(false)">⬇️ Baixar PDF</button>
+  <button class="sec" onclick="document.getElementById('wpp').scrollIntoView({behavior:'smooth'})">💬 Lista p/ WhatsApp</button>
+  <span id="msgPdf" class="sub"></span>
+  <button class="sec" onclick="location.reload()">🔒 Sair</button>
+ </div>
+</header>
+<main>
+ <section class="kpis" id="kpis"></section>
+ <section class="grid">
+  <div class="card"><h2>🧒 Crianças por torre</h2><div id="cCriancas"></div></div>
+  <div class="card"><h2>🏠 Apartamentos participantes por torre</h2><div id="cAptos"></div></div>
+  <div class="card"><h2>📊 Apartamentos por nº de crianças</h2><div id="cDistrib"></div></div>
+  <div class="card"><h2>📅 Respostas válidas por dia</h2><div id="cDia"></div></div>
+ </section>
+ <section class="grid">
+  <div class="card"><h2>🏢 Resumo por torre</h2><table id="tTorres"></table></div>
+  <div class="card"><h2>🏆 Maiores grupos de crianças (top 5)</h2><div id="cTop"></div></div>
+ </section>
+ <section class="card">
+  <h2>📋 Participantes</h2>
+  <div class="tools noprint">
+   <select id="fTorre"></select>
+   <input type="search" id="fBusca" placeholder="Buscar apartamento…">
+   <span class="sub" id="fCont"></span>
+  </div>
+  <div class="scroll"><table id="tDados"></table></div>
+ </section>
+ <section class="card" id="wpp">
+  <h2>💬 Lista de apartamentos para o WhatsApp</h2>
+  <div class="tools">
+   <label><input type="checkbox" id="oCriancas"> Mostrar nº de crianças por apartamento</label>
+   <label><input type="checkbox" id="oTotais" checked> Mostrar totais</label>
+  </div>
+  <textarea id="txtWpp" readonly></textarea>
+  <div class="tools" style="margin-top:10px"><button id="bCopiar">Copiar lista</button><button class="sec" id="bEnviar">Abrir no WhatsApp</button><span id="msgCopia" class="ok"></span></div>
+ </section>
+</main>
+<script>
+const DADOS_BRUTOS = __DADOS__; // preenchido por tools/build.mjs
+
+const SEM_DOCES = __SEM_DOCES__;
+const CORES = ['#ff8a1f','#9d6bff','#7ddc3c','#ff5fa2','#2ec4b6','#ffd23f','#5aa9ff','#ff6b6b'];
+const nf = new Intl.NumberFormat('pt-BR',{maximumFractionDigits:1});
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '—').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const vazio = v => v === null || v === undefined || String(v).trim() === '';
+const fmtData = (d,h) => d.toLocaleDateString('pt-BR',h?{day:'2-digit',month:'2-digit',year:'numeric'}:{day:'2-digit',month:'2-digit'}) + (h ? ' ' + d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : '');
+
+/*__LIMPAR__*/
+const dados = limpar(DADOS_BRUTOS, SEM_DOCES);
+const entregam = dados.filter(d=>d.entrega);
+const torres = [...new Set(dados.map(d=>d.torre))].sort();
+const cor = t => CORES[torres.indexOf(t) % CORES.length];
+const soma = a => a.reduce((s,d)=>s+d.criancas,0);
+
+/* ---------- Componentes ---------- */
+const GRAF = {};
+function barras(id,itens,fmt=v=>v){ GRAF[id]=itens;
+  const max = Math.max(...itens.map(i=>i.valor),1);
+  $(id).innerHTML = itens.map(i=>`<div class="bar"><span class="rot">${esc(i.rot)}</span><div class="trilho"><div class="fill" style="width:${i.valor/max*100}%;background:${i.cor}"></div></div><b>${fmt(i.valor)}</b></div>`).join('') || '<span class="sub">Sem dados</span>';
+}
+function render(){
+  const total = soma(dados), nApt = dados.length, comCri = dados.filter(d=>d.criancas>0).length;
+  const porTorre = torres.map(t=>{const l=dados.filter(d=>d.torre===t);return {t,apts:l.length,cri:soma(l)}});
+  const lider = [...porTorre].sort((a,b)=>b.cri-a.cri)[0];
+  const maxC = Math.max(...dados.map(d=>d.criancas),0), maiores = dados.filter(d=>d.criancas===maxC);
+  const ult = DADOS_BRUTOS.map(r=>new Date(r[0])).reduce((a,b)=>a>b?a:b,new Date(0));
+  $('atualizado').textContent = fmtData(ult,true);
+  const kp = [[nApt,'Apartamentos participantes'],[entregam.length,'Aptos. que entregam doces'],[total,'Total de crianças'],[nf.format(total/(nApt||1)),'Média de crianças por apto.'],
+    [comCri,`Aptos. com crianças (${nf.format(comCri/(nApt||1)*100)}%)`],[nApt-comCri,'Aptos. sem crianças (0)'],
+    [lider?lider.t:'—',`Torre com mais crianças (${lider?lider.cri:0})`],[maxC,'Maior grupo: '+maiores.map(d=>`Apto ${d.apto}/${d.torre}`).join(', ')]];
+  window.KPIS = kp; $('kpis').innerHTML = kp.map(([v,l])=>`<div class="kpi"><b>${v}</b><small>${esc(l)}</small></div>`).join('');
+  barras('cCriancas',porTorre.map(p=>({rot:'Torre '+p.t,valor:p.cri,cor:cor(p.t)})));
+  barras('cAptos',porTorre.map(p=>({rot:'Torre '+p.t,valor:p.apts,cor:cor(p.t)})));
+  const dist = {}; dados.forEach(d=>dist[d.criancas]=(dist[d.criancas]||0)+1);
+  barras('cDistrib',Object.keys(dist).map(Number).sort((a,b)=>a-b).map(q=>({rot:q+(q===1?' criança':' crianças'),valor:dist[q],cor:CORES[0]})));
+  const dia = {}; dados.forEach(d=>{const k=d.quando.toLocaleDateString('sv'); (dia[k]=dia[k]||{rot:fmtData(d.quando),valor:0}).valor++;});
+  barras('cDia',Object.keys(dia).sort().map(k=>({...dia[k],cor:CORES[1]})));
+  $('tTorres').innerHTML = '<tr><th>Torre</th><th class="n">Aptos.</th><th class="n">Crianças</th><th class="n">Média</th><th class="n">% crianças</th></tr>' +
+    porTorre.map(p=>`<tr><td><b style="color:${cor(p.t)}">●</b> Torre ${p.t}</td><td class="n">${p.apts}</td><td class="n">${p.cri}</td><td class="n">${nf.format(p.cri/(p.apts||1))}</td><td class="n">${nf.format(p.cri/(total||1)*100)}%</td></tr>`).join('') +
+    `<tr><th>Total</th><th class="n">${nApt}</th><th class="n">${total}</th><th class="n">${nf.format(total/(nApt||1))}</th><th class="n">100%</th></tr>`;
+  barras('cTop',[...dados].sort((a,b)=>b.criancas-a.criancas||a.torre.localeCompare(b.torre)||a.apto-b.apto).slice(0,5).map(d=>({rot:`Apto ${d.apto} · ${d.torre}`,valor:d.criancas,cor:cor(d.torre)})));
+  $('fTorre').innerHTML = '<option value="">Todas as torres</option>' + torres.map(t=>`<option>${t}</option>`).join('');
+  tabela(); whatsapp();
+}
+function tabela(){
+  const t = $('fTorre').value, q = $('fBusca').value.trim();
+  const l = dados.filter(d=>(!t||d.torre===t)&&(!q||String(d.apto).includes(q)));
+  $('fCont').textContent = `${l.length} de ${dados.length} apartamentos`;
+  $('tDados').innerHTML = '<tr><th>Torre</th><th>Apartamento</th><th class="n">Crianças</th><th>Respondido em</th></tr>' +
+    l.map(d=>`<tr><td>${d.torre}</td><td>${d.apto}${d.entrega?'':' <small class="sub">(sem entrega de doces)</small>'}</td><td class="n">${d.criancas}</td><td>${fmtData(d.quando,true)}</td></tr>`).join('');
+}
+function whatsapp(){
+  const cri = $('oCriancas').checked, tot = $('oTotais').checked;
+  let s = '🎃 *Coleta de Doces – Halloween 2026*\n🏢 Condomínio Monumento São Paulo\n';
+  if(tot) s += `\n✅ *${entregam.length} apartamentos participantes*\n🧒 ${soma(dados)} crianças no total\n`;
+  torres.forEach(t=>{
+    const l = entregam.filter(d=>d.torre===t); if(!l.length) return;
+    s += `\n*Torre ${t}* (${l.length} aptos.${tot?`, ${soma(dados.filter(d=>d.torre===t))} crianças`:''})\n` + l.map(d=>cri?`${d.apto} (${d.criancas})`:d.apto).join(', ') + '\n';
+  });
+  $('txtWpp').value = s.trim();
+}
+$('fTorre').onchange = $('fBusca').oninput = tabela;
+$('oCriancas').onchange = $('oTotais').onchange = whatsapp;
+$('bCopiar').onclick = async ()=>{
+  const ta = $('txtWpp');
+  try{ await navigator.clipboard.writeText(ta.value); }catch(e){ ta.select(); document.execCommand('copy'); }
+  $('msgCopia').textContent = '✔ Copiado! Cole no WhatsApp.'; setTimeout(()=>$('msgCopia').textContent='',3000);
+};
+/* ---------- PDF (gerado no próprio navegador, sem bibliotecas) ---------- */
+const sane = s => String(s).replace(/[^\x20-\x7e\u00a1-\u00ff]/g,'-').replace(/[\\()]/g,'\\$&');
+const rgbPdf = h => [1,3,5].map(i=>(parseInt(h.slice(i,i+2),16)/255).toFixed(3)).join(' ');
+const quebra = (s,n) => {const o=[];let l='';String(s).split(' ').forEach(w=>{if((l+' '+w).trim().length>n){o.push(l);l=w}else l=(l+' '+w).trim()});if(l)o.push(l);return o;};
+function montarPDF(pg){
+  let out='%PDF-1.4\n'; const off=[], N=pg.length, tot=5+2*N;
+  const add=(n,b)=>{off[n]=out.length; out+=`${n} 0 obj\n${b}\nendobj\n`;};
+  add(1,'<< /Type /Catalog /Pages 2 0 R >>');
+  add(2,`<< /Type /Pages /Kids [${pg.map((_,i)=>`${5+i} 0 R`).join(' ')}] /Count ${N} >>`);
+  add(3,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>');
+  add(4,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>');
+  pg.forEach((c,i)=>add(5+i,`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${5+N+i} 0 R >>`));
+  pg.forEach((c,i)=>add(5+N+i,`<< /Length ${c.length} >>\nstream\n${c}\nendstream`));
+  const x=out.length;
+  out+=`xref\n0 ${tot}\n0000000000 65535 f \n`+off.slice(1).map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<< /Size ${tot} /Root 1 0 R >>\nstartxref\n${x}\n%%EOF`;
+  return Uint8Array.from(out,ch=>ch.charCodeAt(0));
+}
+function relatorioPDF(){
+  const W=595,H=842,M=40,pg=[]; let c='',y=H-M;
+  const T=(s,x,yy,sz=10,b=false,col='0 0 0')=>{c+=`${col} rg BT /${b?'F2':'F1'} ${sz} Tf ${x.toFixed(1)} ${yy.toFixed(1)} Td (${sane(s)}) Tj ET\n`;};
+  const R=(x,yy,w,h,col)=>{c+=`${col} rg ${x.toFixed(1)} ${yy.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)} re f\n`;};
+  const garante=h=>{if(y-h<M){pg.push(c);c='';y=H-M;}};
+  const CIN='0.4 0.4 0.4', LAR='0.76 0.35 0';
+  T('Coleta de Doces - Halloween 2026',M,y-18,20,true,LAR); y-=28;
+  T(`Condomínio Monumento São Paulo - Atualizado em ${$('atualizado').textContent}`,M,y-10,10,false,CIN); y-=30;
+  const bw=(W-2*M-30)/4;
+  for(let r=0;r<window.KPIS.length;r+=4){
+    garante(66); const top=y;
+    window.KPIS.slice(r,r+4).forEach(([v,l],i)=>{const x=M+i*(bw+10);
+      R(x,top-54,bw,54,'0.96 0.94 0.90'); T(String(v),x+8,top-24,18,true,LAR);
+      quebra(l,28).slice(0,2).forEach((s,k)=>T(s,x+8,top-37-k*10,8,false,CIN));});
+    y=top-64;
+  }
+  y-=6;
+  const barrasPDF=(id)=>{const itens=GRAF[id]||[]; garante(34+itens.length*16);
+    T($(id).parentElement.querySelector('h2').textContent.replace(/^[^A-Za-zÀ-ÿ0-9]+/,''),M,y-12,12,true); y-=26;
+    const max=Math.max(...itens.map(i=>i.valor),1);
+    itens.forEach(i=>{const w=i.valor/max*300; T(i.rot,M,y-9,9,false,CIN); R(M+100,y-11,Math.max(w,0.5),11,rgbPdf(i.cor)); T(String(i.valor),M+106+w,y-9,9,true); y-=16;});
+    y-=12;};
+  barrasPDF('cCriancas'); barrasPDF('cAptos');
+  const xs=[0,90,160,240,320], linhas=[...$('tTorres').rows].map(r=>[...r.cells].map(k=>k.textContent.replace(/^●\s*/,'').trim()));
+  garante(40+linhas.length*16); T('Resumo por torre',M,y-12,12,true); y-=28;
+  linhas.forEach((l,i)=>{const b=i===0||i===linhas.length-1; l.forEach((v,k)=>T(v,M+xs[k],y-9,9,b,i===0?CIN:'0 0 0')); y-=16;}); y-=12;
+  barrasPDF('cDistrib'); barrasPDF('cTop'); barrasPDF('cDia');
+  garante(60); T(`Apartamentos participantes que entregam doces (${entregam.length})`,M,y-12,12,true); y-=28;
+  torres.forEach(t=>{const l=entregam.filter(d=>d.torre===t); if(!l.length) return; const ls=quebra(l.map(d=>d.apto).join(', '),95);
+    garante(18+ls.length*13); T(`Torre ${t} - ${l.length} aptos., ${soma(dados.filter(d=>d.torre===t))} crianças na torre`,M,y-9,10,true,cor(t).length===7?rgbPdf('#8a4a00'):'0 0 0'); y-=15;
+    ls.forEach(s=>{T(s,M,y-9,10); y-=13;}); y-=8;});
+  const sem=dados.filter(d=>!d.entrega); if(sem.length){garante(20); T('Sem entrega de doces no apartamento: '+sem.map(d=>d.apto+' '+d.torre).join(', '),M,y-9,9,false,CIN);}
+  pg.push(c); return montarPDF(pg);
+}
+async function exportarPDF(compartilhar){
+  const nome='dashboard_halloween_2026.pdf', msg=$('msgPdf');
+  try{
+    const arq=new File([relatorioPDF()],nome,{type:'application/pdf'});
+    if(compartilhar && navigator.canShare && navigator.canShare({files:[arq]})){
+      try{ await navigator.share({files:[arq],title:'Coleta de Doces - Halloween 2026'}); return; }catch(e){ if(e.name==='AbortError') return; }
+    }
+    const a=document.createElement('a'); a.href=URL.createObjectURL(arq); a.download=nome; document.body.appendChild(a); a.click(); a.remove();
+    msg.textContent = compartilhar ? 'Compartilhar não é suportado aqui: o PDF foi baixado.' : 'PDF gerado!';
+  }catch(e){ msg.textContent='Não foi possível gerar o PDF neste navegador. Abra o arquivo no Chrome/Safari.'; }
+  setTimeout(()=>msg.textContent='',6000);
+}
+$('bEnviar').onclick = () => window.open('https://wa.me/?text='+encodeURIComponent($('txtWpp').value),'_blank');
+render();
+</script>
+</body>
+</html>
