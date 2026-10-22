@@ -109,7 +109,22 @@ function mostrar(t){
 }
 function iniciar(d){
   P = {}; d.apartamentos.slice().sort((a,b)=>a.torre.localeCompare(b.torre)||a.apto-b.apto).forEach(x=>(P[x.torre]=P[x.torre]||[]).push(x));
-  T = Object.keys(P); $('at').textContent = d.editadoEm || d.atualizado;
+  T = Object.keys(P);
+  const dataAtualizacao = d.editadoEm || d.atualizado;
+  function formatarData(valor) {
+    if (!valor) return '';
+    const data = new Date(valor);
+    if (!Number.isNaN(data.getTime())) {
+      return new Intl.DateTimeFormat('pt-BR', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+        timeZone: 'America/Sao_Paulo'
+      }).format(data).replace(',', '');
+    }
+    const legada = String(valor).match(/^(\\d{2})\\/(\\d{2})\\/(\\d{4})[, ]+([0-2]\\d):([0-5]\\d)$/);
+    return legada ? `${legada[1]}/${legada[2]}/${legada[3]} ${legada[4]}:${legada[5]}` : String(valor);
+  }
+  $('at').textContent = formatarData(dataAtualizacao);
   $('bts').innerHTML = [...T,'*'].map(t=>`<button data-t="${t}">${t==='*'?'Todas':'Torre '+t}</button>`).join('');
   if(sel && (sel==='*' || P[sel])) mostrar(sel); else { sel = null; $('res').hidden = true; }
 }
