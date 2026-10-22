@@ -40,7 +40,7 @@ a{color:var(--mu)}#fLogin input[type=password],#fLogin input[type=text]{width:10
  <section class="card" id="aviso">
   <h2>🍬 Os doces do seu apartamento acabaram?</h2>
   <p class="sub">Toque no botão para avisar o Willian pelo WhatsApp e tirar o seu apartamento da lista.</p>
-  <a class="btnlink" href="https://wa.me/5511963820374?text=Ol%C3%A1%2C%20Willian%2C%20os%20doces%20do%20meu%20apartamento%20acabou%2C%20voc%C3%AA%20pode%20tirar%20o%20meu%20apartamento%20da%20lista%3F%20Obrigado%28a%29" target="_blank" rel="noopener">💬 Avisar que meus doces acabaram</a>
+  <a class="btnlink" href="#" id="btnAvisar">💬 Avisar que meus doces acabaram</a>
  </section>
  <p class="rodape"><a href="#" id="lnkAdm">🔒 Administração</a></p>
  <form class="card" id="fLogin" hidden autocomplete="off">
@@ -108,6 +108,32 @@ $('fLogin').onsubmit = async e => {
   try{ await abrirAdmin($('seg').value.replace(/\s+/g,'').toLowerCase()); }
   catch(err){ $('erro').textContent = 'Chave incorreta.'; $('bEnt').disabled = false; $('bEnt').textContent = 'Entrar'; $('seg').select(); }
 };
+})();
+</script>
+
+<script>
+(() => {
+  const botao = document.getElementById("btnAvisar");
+  if (!botao) return;
+  botao.addEventListener("click", event => {
+    event.preventDefault();
+    const torreRaw = prompt("Qual é o bloco ou a torre do apartamento? (A a F)");
+    if (torreRaw === null) return;
+    const torre = torreRaw.trim().toUpperCase().replace(/^(BLOCO|TORRE)\\s*/, "");
+    const aptoRaw = prompt("Qual é o número do apartamento?");
+    if (aptoRaw === null) return;
+    const apto = aptoRaw.trim();
+    if (!/^[A-F]$/.test(torre) || !/^\\d{1,4}$/.test(apto) || Number(apto) < 1) {
+      alert("Confira os dados: informe uma torre de A a F e um número de apartamento válido.");
+      return;
+    }
+    const urlProcessar = "https://pycriador.github.io/Doces-Halloween-Monumento-SP-/processar.html?torre="
+      + encodeURIComponent(torre) + "&apto=" + encodeURIComponent(apto);
+    const mensagem = "Olá, Willian! Os doces do meu apartamento acabaram. " +
+      "Bloco/Torre: " + torre + "; apartamento: " + apto + ". " +
+      "Link para conferir e processar o aviso: " + urlProcessar;
+    window.location.href = "https://wa.me/5511963820374?text=" + encodeURIComponent(mensagem);
+  });
 })();
 </script>
 </body>
