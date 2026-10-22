@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1e1433">
+<title>Processar aviso · Coleta de Doces 2026</title>
+<style>
+:root{color-scheme:dark;--bg:#120b1f;--card:#1e1433;--tx:#f4eefc;--mu:#b8a9d1;--bd:#44305f;--or:#ff9b32;--red:#ff8a8a}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#2a1450,var(--bg) 60%);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:620px;margin:auto;padding:24px 16px}h1{font-size:1.55rem;margin:0 0 6px}h2{font-size:1.05rem;color:var(--or);margin:0 0 12px}.muted{color:var(--mu);font-size:.92rem}
+.card{border:1px solid var(--bd);border-radius:16px;background:var(--card);padding:18px;margin:16px 0}
+.summary{font-size:1.25rem;font-weight:750;margin:8px 0}.warning{border-left:4px solid var(--or);padding:10px 12px;background:#2b1d36;border-radius:8px;font-size:.92rem}
+button,a.btn{display:block;width:100%;border:0;border-radius:12px;padding:13px 16px;margin-top:12px;font:inherit;font-weight:750;text-align:center;text-decoration:none;cursor:pointer;background:var(--or);color:#1a0d00}
+button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#302148!important;color:var(--tx)!important;border:1px solid var(--bd)!important}
+.error{color:var(--red)}code{overflow-wrap:anywhere}
+</style>
+</head>
+<body><main>
+<h1>🎃 Processar aviso de doces</h1>
+<p class="muted">Condomínio Monumento São Paulo · Halloween 2026</p>
+<section class="card">
+<h2>Confira a solicitação</h2>
+<p id="status" class="muted">Lendo os dados do link…</p>
+<div id="resumo" class="summary" hidden></div>
+<p id="detalhe" class="muted"></p>
+<div class="warning">Ao continuar, você abrirá uma solicitação no GitHub usando sua conta conectada. A atualização só será executada se a solicitação for enviada por <strong>pycriador</strong> e passar pelas validações automáticas. Nenhuma chave de acesso é guardada nesta página.</div>
+<button id="continuar" disabled>Continuar para autorizar no GitHub</button>
+<a class="btn secondary" href="./">Voltar ao painel</a>
+</section>
+<p class="muted">Se os dados não forem reconhecidos, não prossiga. Confira o bloco e o apartamento no aviso recebido.</p>
+</main>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  const pick = (...keys) => { for (const key of keys) { const value=params.get(key); if(value && value.trim()) return value.trim(); } return ""; };
+  const towerAliases = ["torre","bloco","tower","block"];
+  const aptAliases = ["apto","apartamento","apt","unit"];
+  let tower = pick(...towerAliases).toUpperCase().replace(/[^A-F]/g,"");
+  let aptRaw = pick(...aptAliases);
+  const message = pick("mensagem","message","msg","texto","text","body","data");
+  if ((!tower || !aptRaw) && message) {
+    const t = message.match(/(?:bloco|torre)\s*[:#-]?\s*([A-F])\b/i);
+    const a = message.match(/(?:apartamento|apto\.?|apt\.?|unidade)\s*[:#-]?\s*(\d{1,4})\b/i);
+    if (!tower && t) tower=t[1].toUpperCase();
+    if (!aptRaw && a) aptRaw=a[1];
+  }
+  const apt = /^\d{1,4}$/.test(aptRaw) ? Number(aptRaw) : NaN;
+  const valid = /^[A-F]$/.test(tower) && Number.isInteger(apt) && apt >= 1 && apt <= 9999;
+  if (valid) {
+    $("status").textContent = "Dados identificados a partir do link:";
+    $("resumo").hidden = false;
+    $("resumo").textContent = "Torre " + tower + " · Apartamento " + apt;
+    $("detalhe").textContent = "A solicitação pedirá para marcar este apartamento como “Sem doces” (acabou: true).";
+    $("continuar").disabled = false;
+    $("continuar").addEventListener("click", () => {
+      const title = "[SEM DOCES] Torre " + tower + " apartamento " + apt;
+      const body = [
+        "SOLICITACAO_SEM_DOCES_V1",
+        "",
+        "Torre: " + tower,
+        "Apartamento: " + apt,
+        "Origem: link wapp.me / WhatsApp",
+        "",
+        "Confirmo que revisei os dados e autorizo marcar este apartamento como sem doces."
+      ].join("\n");
+      const url = "https://github.com/pycriador/Doces-Halloween-Monumento-SP-/issues/new"
+        + "?title=" + encodeURIComponent(title)
+        + "&body=" + encodeURIComponent(body);
+      location.href = url;
+    });
+  } else {
+    $("status").innerHTML = '<span class="error">Não foi possível identificar com segurança o bloco e o apartamento.</span>';
+    $("detalhe").textContent = "Use parâmetros na URL como ?torre=D&apto=16 ou uma mensagem contendo “apartamento 16, bloco D”.";
+  }
+})();
+</script>
+</body></html>
