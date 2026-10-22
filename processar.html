@@ -39,7 +39,7 @@ button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#302148!imp
   const aptAliases = ["apto","apartamento","apt","unit"];
   let tower = pick(...towerAliases).toUpperCase().replace(/[^A-F]/g,"");
   let aptRaw = pick(...aptAliases);
-  const message = pick("mensagem","message","msg","text","body","data");
+  const message = pick("mensagem","message","msg","texto","text","body","data");
   if ((!tower || !aptRaw) && message) {
     const t = message.match(/(?:bloco|torre)\s*[:#-]?\s*([A-F])\b/i);
     const a = message.match(/(?:apartamento|apto\.?|apt\.?|unidade)\s*[:#-]?\s*(\d{1,4})\b/i);
