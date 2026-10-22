@@ -119,11 +119,11 @@ $('fLogin').onsubmit = async e => {
     event.preventDefault();
     const torreRaw = prompt("Qual é o bloco ou a torre do apartamento? (A a F)");
     if (torreRaw === null) return;
-    const torre = torreRaw.trim().toUpperCase().replace(/^(BLOCO|TORRE)\\s*/, "");
+    const torre = torreRaw.trim().toUpperCase().replace(/^(BLOCO|TORRE)\s*/, "");
     const aptoRaw = prompt("Qual é o número do apartamento?");
     if (aptoRaw === null) return;
     const apto = aptoRaw.trim();
-    if (!/^[A-F]$/.test(torre) || !/^\\d{1,4}$/.test(apto) || Number(apto) < 1) {
+    if (!/^[A-F]$/.test(torre) || !/^\d{1,4}$/.test(apto) || Number(apto) < 1) {
       alert("Confira os dados: informe uma torre de A a F e um número de apartamento válido.");
       return;
     }
