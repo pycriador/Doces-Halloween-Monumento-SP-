@@ -22,6 +22,19 @@ label{color:var(--mu);font-size:.9rem}.acoes{display:flex;gap:8px;flex-wrap:wrap
 .btnlink{display:block;width:100%;text-align:center;border-radius:12px;padding:12px 14px;background:var(--or);color:#1a0d00;font:inherit;font-weight:700;border:0;cursor:pointer}
 .riscado{text-decoration:line-through;opacity:.5}.ok{color:#7ddc7d}.erro{color:#ff7b7b;margin-top:10px}.rodape{text-align:center;margin-top:28px;font-size:.9rem}
 a{color:var(--mu)}#fLogin input[type=password],#fLogin input[type=text]{width:100%;margin-bottom:10px}
+
+.modal-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(8,4,15,.78);backdrop-filter:blur(5px)}
+.modal-overlay[hidden]{display:none}
+.modal-card{position:relative;width:min(100%,420px);max-height:calc(100vh - 36px);overflow:auto;background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:24px;box-shadow:0 24px 80px rgba(0,0,0,.45)}
+.modal-card h2{padding-right:28px}
+.modal-fechar{position:absolute;right:12px;top:10px;border:0;background:transparent;font-size:1.8rem;line-height:1;padding:4px 8px;color:var(--mu)}
+#formAviso{display:grid;gap:8px;margin-top:16px}
+#formAviso label{margin-top:6px}
+#formAviso select,#formAviso input{width:100%;font:inherit;border-radius:12px;border:1px solid var(--bd);background:#150d26;color:var(--tx);padding:13px 14px;min-height:48px}
+#formAviso select:invalid{color:var(--mu)}
+#formAviso .modal-enviar,#formAviso .modal-cancelar{width:100%;margin-top:8px}
+#formAviso .modal-cancelar{background:transparent;color:var(--mu);border:1px solid var(--bd)}
+body.modal-aberto{overflow:hidden}
 </style>
 </head>
 <body>
@@ -39,11 +52,31 @@ a{color:var(--mu)}#fLogin input[type=password],#fLogin input[type=text]{width:10
  </section>
  <section class="card" id="aviso">
   <h2>🍬 Os doces do seu apartamento acabaram?</h2>
-  <p class="sub">Informe o seu apartamento e toque no botão para avisar o Willian pelo WhatsApp e tirar o seu apartamento da lista.</p>
-  <div class="acoes" style="margin:10px 0"><select id="avTorre"></select><input type="number" id="avApto" min="1" inputmode="numeric" placeholder="Apartamento" style="width:150px"></div>
-  <button class="btnlink" id="bAviso" type="button">💬 Avisar que meus doces acabaram</button>
-  <div id="avErro" class="erro"></div>
+  <p class="sub">Toque no botão para avisar o Willian pelo WhatsApp e tirar o seu apartamento da lista.</p>
+  <a class="btnlink" href="#" id="btnAvisar">💬 Avisar que meus doces acabaram</a>
  </section>
+ 
+ <div id="modalAviso" class="modal-overlay" hidden>
+  <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalAvisoTitulo">
+   <button type="button" class="modal-fechar" id="fecharModalAviso" aria-label="Fechar">×</button>
+   <h2 id="modalAvisoTitulo">🍬 Avisar que os doces acabaram</h2>
+   <p class="sub">Informe o bloco e o número do apartamento.</p>
+   <form id="formAviso" novalidate>
+    <label for="blocoAviso">Bloco / Torre</label>
+    <select id="blocoAviso" required>
+     <option value="" selected disabled>Selecione o bloco</option>
+     <option value="A">Bloco A</option><option value="B">Bloco B</option>
+     <option value="C">Bloco C</option><option value="D">Bloco D</option>
+     <option value="E">Bloco E</option><option value="F">Bloco F</option>
+    </select>
+    <label for="aptoAviso">Número do apartamento</label>
+    <input id="aptoAviso" type="number" inputmode="numeric" min="1" max="9999" step="1" placeholder="Ex.: 123" required>
+    <div id="erroAviso" class="erro" role="alert" aria-live="polite"></div>
+    <button type="submit" class="acao modal-enviar">Continuar para o WhatsApp</button>
+    <button type="button" id="cancelarModalAviso" class="modal-cancelar">Cancelar</button>
+   </form>
+  </section>
+ </div>
  <p class="rodape"><a href="#" id="lnkAdm">🔒 Administração</a></p>
  <form class="card" id="fLogin" hidden autocomplete="off">
   <h2>🔒 Administração</h2>
@@ -76,7 +109,22 @@ function mostrar(t){
 }
 function iniciar(d){
   P = {}; d.apartamentos.slice().sort((a,b)=>a.torre.localeCompare(b.torre)||a.apto-b.apto).forEach(x=>(P[x.torre]=P[x.torre]||[]).push(x));
-  T = Object.keys(P); $('at').textContent = d.editadoEm || d.atualizado;
+  T = Object.keys(P);
+  const dataAtualizacao = d.editadoEm || d.atualizado;
+  function formatarData(valor) {
+    if (!valor) return '';
+    const data = new Date(valor);
+    if (!Number.isNaN(data.getTime())) {
+      return new Intl.DateTimeFormat('pt-BR', {
+        timeZone: 'America/Sao_Paulo',
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+      }).format(data).replace(',', '');
+    }
+    const legada = String(valor).match(/^(\\d{2})\\/(\\d{2})\\/(\\d{4})[, ]+([0-2]\\d):([0-5]\\d)$/);
+    return legada ? `${legada[1]}/${legada[2]}/${legada[3]} ${legada[4]}:${legada[5]}` : String(valor);
+  }
+  $('at').textContent = formatarData(dataAtualizacao);
   const cur = $('avTorre').value; $('avTorre').innerHTML = '<option value="">Torre</option>' + T.map(t=>`<option>${t}</option>`).join(''); $('avTorre').value = cur;
   $('bts').innerHTML = [...T,'*'].map(t=>`<button data-t="${t}">${t==='*'?'Todas':'Torre '+t}</button>`).join('');
   if(sel && (sel==='*' || P[sel])) mostrar(sel); else { sel = null; $('res').hidden = true; }
@@ -84,13 +132,6 @@ function iniciar(d){
 $('bts').onclick = e => { const t = e.target.dataset && e.target.dataset.t; if(!t) return; mostrar(t); $('res').scrollIntoView({behavior:'smooth',block:'nearest'}); };
 iniciar(P0);   /* versão embutida; em seguida carrega a lista publicada (participantes.json), que pode ter sido editada à mão */
 try{ fetch('participantes.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(d=>{ if(d && Array.isArray(d.apartamentos)) iniciar(d); }).catch(()=>{}); }catch(e){}
-const MSG_AVISO = 'Olá, Willian, os doces do meu apartamento acabou, você pode tirar o meu apartamento da lista? Obrigado(a)';
-$('bAviso').onclick = () => {
-  const t = $('avTorre').value, a = parseInt($('avApto').value,10);
-  if(!t || !(a>0)){ $('avErro').textContent = 'Escolha a torre e informe o número do apartamento.'; return; }
-  $('avErro').textContent = '';
-  window.open('https://wa.me/5511963820374?text=' + encodeURIComponent(`${MSG_AVISO}\n\nApartamento ${a} - Torre ${t}`), '_blank');
-};
 $('bCop').onclick = async () => {
   try{ await navigator.clipboard.writeText($('rMsg').value); }catch(e){ $('rMsg').select(); document.execCommand('copy'); }
   $('rOk').textContent = '✔ Copiado!'; setTimeout(()=>$('rOk').textContent='',3000);
@@ -119,6 +160,50 @@ $('fLogin').onsubmit = async e => {
   try{ await abrirAdmin($('seg').value.replace(/\s+/g,'').toLowerCase()); }
   catch(err){ $('erro').textContent = 'Chave incorreta.'; $('bEnt').disabled = false; $('bEnt').textContent = 'Entrar'; $('seg').select(); }
 };
+})();
+</script>
+<script>
+(() => {
+  const botao = document.getElementById("btnAvisar");
+  const modal = document.getElementById("modalAviso");
+  const form = document.getElementById("formAviso");
+  const bloco = document.getElementById("blocoAviso");
+  const apto = document.getElementById("aptoAviso");
+  const erro = document.getElementById("erroAviso");
+  if (!botao || !modal || !form) return;
+
+  function abrirModal() {
+    modal.hidden = false;
+    document.body.classList.add("modal-aberto");
+    erro.textContent = "";
+    bloco.focus();
+  }
+  function fecharModal() {
+    modal.hidden = true;
+    document.body.classList.remove("modal-aberto");
+    botao.focus();
+  }
+  botao.addEventListener("click", event => { event.preventDefault(); abrirModal(); });
+  document.getElementById("fecharModalAviso").addEventListener("click", fecharModal);
+  document.getElementById("cancelarModalAviso").addEventListener("click", fecharModal);
+  modal.addEventListener("click", event => { if (event.target === modal) fecharModal(); });
+  document.addEventListener("keydown", event => { if (event.key === "Escape" && !modal.hidden) fecharModal(); });
+
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    const torre = bloco.value;
+    const numero = apto.value.trim();
+    if (!/^[A-F]$/.test(torre) || !/^\d{1,4}$/.test(numero) || Number(numero) < 1 || Number(numero) > 9999) {
+      erro.textContent = "Selecione um bloco de A a F e informe um número de apartamento entre 1 e 9999.";
+      return;
+    }
+    const urlProcessar = "https://pycriador.github.io/Doces-Halloween-Monumento-SP-/processar.html?torre="
+      + encodeURIComponent(torre) + "&apto=" + encodeURIComponent(numero);
+    const mensagem = "Olá, Willian! Os doces do meu apartamento acabaram. " +
+      "Bloco/Torre: " + torre + "; apartamento: " + numero + ". " +
+      "Link para conferir e processar o aviso: " + urlProcessar;
+    window.location.href = "https://wa.me/5511963820374?text=" + encodeURIComponent(mensagem);
+  });
 })();
 </script>
 </body>
