@@ -1,325 +1,58 @@
-{
-  "versao": 1,
-  "atualizado": "22/10/2026, 01:30",
-  "editadoEm": "2026-10-22T04:30:49.965Z",
-  "apartamentos": [
-    {
-      "torre": "A",
-      "apto": 41,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 44,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 112,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 203,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 25,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 55,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 56,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 66,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 95,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 144,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 162,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 205,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 206,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 214,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 241,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 284,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 11,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 33,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 45,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 92,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 125,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 145,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 154,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 202,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 214,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 234,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 16,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 43,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 54,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 96,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 165,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 176,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 245,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 11,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 32,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 35,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 41,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 104,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 115,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 166,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 175,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 183,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 226,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 234,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 245,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 251,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 283,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 14,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 53,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 61,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 153,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 244,
-      "acabou": false,
-      "origem": "planilha"
-    }
-  ],
-  "removidos": [
-    {
-      "torre": "A",
-      "apto": 231
-    }
-  ]
-}
+{"versao":1,"atualizado":"22/10/2026 10:25","editadoEm":null,
+"apartamentos":[
+ {"torre":"A","apto":41,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":44,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":112,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":203,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":25,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":55,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":56,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":66,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":95,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":144,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":162,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":205,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":206,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":214,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":241,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":284,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":11,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":33,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":45,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":92,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":125,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":145,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":154,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":202,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":214,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":234,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":16,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":43,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":54,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":96,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":165,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":176,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":245,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":11,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":32,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":35,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":41,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":104,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":115,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":166,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":175,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":183,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":226,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":234,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":245,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":251,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":283,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":14,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":53,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":61,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":153,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":244,"acabou":false,"origem":"planilha"}
+],
+"removidos":[
+ {"torre":"A","apto":231}
+]}

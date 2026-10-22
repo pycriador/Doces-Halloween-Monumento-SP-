@@ -7,7 +7,7 @@ Painel da coleta de doces do condomínio, publicado com **GitHub Pages**:
 
 | Tela | Quem vê | O que mostra |
 |---|---|---|
-| **Pública** (`index.html`) | Todos | Botões por torre (A–F e "Todas"). Ao tocar, aparecem os apartamentos participantes da torre e a mensagem pronta para o WhatsApp (copiar ou abrir no WhatsApp). Os apartamentos que **ficaram sem doces aparecem riscados** (e como `~riscado~` na mensagem). A lista vem do arquivo `participantes.json`. Tem o botão **💬 Avisar que meus doces acabaram**, que abre o WhatsApp do Willian (11 96382-0374) com a mensagem pronta. A data **"Atualizado em"** é a da publicação (fuso de São Paulo) e muda a cada build. **Não mostra quantidade de crianças.** |
+| **Pública** (`index.html`) | Todos | Botões por torre (A–F e "Todas"). Ao tocar, aparecem os apartamentos participantes da torre e a mensagem pronta para o WhatsApp (copiar ou abrir no WhatsApp). Os apartamentos que **ficaram sem doces aparecem riscados** (e como `~riscado~` na mensagem). A lista vem do arquivo `participantes.json`. Tem o botão **💬 Avisar que meus doces acabaram**, que abre o WhatsApp do Willian (11 96382-0374) com a mensagem pronta; o morador escolhe a torre e informa o apartamento, que são acrescentados ao fim da mensagem. A data **"Atualizado em"** é a da publicação (fuso de São Paulo) e muda a cada build. **Não mostra quantidade de crianças.** |
 | **Administração** | Só quem tem a chave | Todos os dashboards: indicadores, crianças e apartamentos por torre, distribuição, respostas por dia, maiores grupos, tabela de participantes, lista para WhatsApp com opções e exportação/compartilhamento de PDF e a **gestão da lista pública** (adicionar, marcar sem doces, excluir/restaurar e exportar o `participantes.json`). |
 
 Para entrar na Administração: toque em **🔒 Administração** no rodapé da tela pública e informe a chave.
@@ -92,18 +92,3 @@ tools/xlsx_para_json.py    # Excel -> JSON
 ## Trocar a chave de acesso
 
 Apague `keystore.json`, rode `node tools/build.mjs init` (imprime a nova chave uma única vez) e refaça o `build` com a planilha. A chave antiga deixa de abrir a versão nova.
-
-## Processar aviso “sem doces” pelo celular
-
-A página `processar.html` permite revisar um link recebido pelo WhatsApp/wapp.me. Use um endereço no formato:
-
-```
-https://pycriador.github.io/Doces-Halloween-Monumento-SP-/processar.html?torre=D&apto=16
-```
-
-Também aceita os parâmetros `bloco` e `apartamento`, ou uma mensagem em `mensagem`/ `text`, por exemplo `?text=Apartamento%2016%2C%20bloco%20D`. A página mostra o bloco e o apartamento identificados antes de encaminhar para o GitHub.
-
-**Autorização e segurança:** ao tocar em continuar, a página abre o formulário de nova issue do GitHub com o pedido preenchido. É necessário estar autenticado na conta proprietária `pycriador` e enviar a issue — esse envio é a confirmação explícita. Uma GitHub Action só processa issues abertas por essa conta e com o formato esperado; verifica se o apartamento já existe em `participantes.json`, bloqueia o A231 e marca apenas `acabou: true), preservando os demais campos, os registros removidos e as edições manuais. O fluxo atualiza apenas `participantes.json), pois a página pública já lê esse arquivo.
-
-Não são necessários Copilot, Gemini ou chave de IA para interpretar esse pedido estruturado. **Nunca coloque tokens do GitHub nem chaves de API no HTML ou no `localStorage`**: dados guardados no navegador não são um cofre para credenciais. A automação requer que as GitHub Actions tenham permissão de escrita no repositório; regras de proteção da branch `main` podem exigir configuração adicional.
-
