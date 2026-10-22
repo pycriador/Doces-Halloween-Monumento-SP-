@@ -29,8 +29,9 @@ else if (cmd === 'build') {
   const regras = JSON.parse(fs.readFileSync(R('src/regras.json'), 'utf8'));
   const limparSrc = fs.readFileSync(R('src/limpar.js'), 'utf8');
   const dados = new Function(limparSrc + ';return limpar;')()(rows, regras.semDoces);
-  const ult = rows.map(r => new Date(r[0])).reduce((a, b) => (a > b ? a : b)), p = n => String(n).padStart(2, '0');
-  const atualizado = `${p(ult.getDate())}/${p(ult.getMonth() + 1)}/${ult.getFullYear()} ${p(ult.getHours())}:${p(ult.getMinutes())}`;
+  /* "Atualizado em" = data/hora da PUBLICAÇÃO (fuso de São Paulo): muda a cada build */
+  const fp = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date()), pv = k => fp.find(x => x.type === k).value;
+  const atualizado = `${pv('day')}/${pv('month')}/${pv('year')} ${pv('hour')}:${pv('minute')}`;
   /* lista pública: planilha + edições manuais do participantes.json atual (acabou, manuais, removidos) */
   const atual = arg2 && fs.existsSync(arg2) ? JSON.parse(fs.readFileSync(arg2, 'utf8')) : null, kk = (t, a) => t + '|' + a;
   const removidos = atual ? (atual.removidos || []) : regras.semDoces.map(s => { const m = s.match(/^([A-Z]+)(\d+)$/); return { torre: m[1], apto: +m[2] }; });

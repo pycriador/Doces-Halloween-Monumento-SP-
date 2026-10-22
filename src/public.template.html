@@ -19,6 +19,7 @@ button{cursor:pointer}.torres button{font-weight:700;font-size:1.05rem}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.chip{background:#2b1d47;border-radius:999px;padding:4px 14px;font-weight:600}
 textarea{width:100%;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;background:#150d26;color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:10px;margin:6px 0 10px}
 label{color:var(--mu);font-size:.9rem}.acoes{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btnlink{display:block;text-align:center;text-decoration:none;border-radius:12px;padding:12px 14px;background:var(--or);color:#1a0d00;font-weight:700;margin-top:10px}
 .riscado{text-decoration:line-through;opacity:.5}.ok{color:#7ddc7d}.erro{color:#ff7b7b;margin-top:10px}.rodape{text-align:center;margin-top:28px;font-size:.9rem}
 a{color:var(--mu)}#fLogin input[type=password],#fLogin input[type=text]{width:100%;margin-bottom:10px}
 </style>
@@ -35,6 +36,11 @@ a{color:var(--mu)}#fLogin input[type=password],#fLogin input[type=text]{width:10
   <label for="rMsg">Mensagem para o WhatsApp</label>
   <textarea id="rMsg" readonly rows="9"></textarea>
   <div class="acoes"><button class="acao" id="bCop">Copiar mensagem</button><button id="bWpp">Abrir no WhatsApp</button><span id="rOk" class="ok"></span></div>
+ </section>
+ <section class="card" id="aviso">
+  <h2>🍬 Os doces do seu apartamento acabaram?</h2>
+  <p class="sub">Toque no botão para avisar o Willian pelo WhatsApp e tirar o seu apartamento da lista.</p>
+  <a class="btnlink" href="https://wa.me/5511963820374?text=Ol%C3%A1%2C%20Willian%2C%20os%20doces%20do%20meu%20apartamento%20acabou%2C%20voc%C3%AA%20pode%20tirar%20o%20meu%20apartamento%20da%20lista%3F%20Obrigado%28a%29" target="_blank" rel="noopener">💬 Avisar que meus doces acabaram</a>
  </section>
  <p class="rodape"><a href="#" id="lnkAdm">🔒 Administração</a></p>
  <form class="card" id="fLogin" hidden autocomplete="off">

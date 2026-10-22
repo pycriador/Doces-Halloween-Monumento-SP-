@@ -7,7 +7,7 @@ Painel da coleta de doces do condomínio, publicado com **GitHub Pages**:
 
 | Tela | Quem vê | O que mostra |
 |---|---|---|
-| **Pública** (`index.html`) | Todos | Botões por torre (A–F e "Todas"). Ao tocar, aparecem os apartamentos participantes da torre e a mensagem pronta para o WhatsApp (copiar ou abrir no WhatsApp). Os apartamentos que **ficaram sem doces aparecem riscados** (e como `~riscado~` na mensagem). A lista vem do arquivo `participantes.json`. **Não mostra quantidade de crianças.** |
+| **Pública** (`index.html`) | Todos | Botões por torre (A–F e "Todas"). Ao tocar, aparecem os apartamentos participantes da torre e a mensagem pronta para o WhatsApp (copiar ou abrir no WhatsApp). Os apartamentos que **ficaram sem doces aparecem riscados** (e como `~riscado~` na mensagem). A lista vem do arquivo `participantes.json`. Tem o botão **💬 Avisar que meus doces acabaram**, que abre o WhatsApp do Willian (11 96382-0374) com a mensagem pronta. A data **"Atualizado em"** é a da publicação (fuso de São Paulo) e muda a cada build. **Não mostra quantidade de crianças.** |
 | **Administração** | Só quem tem a chave | Todos os dashboards: indicadores, crianças e apartamentos por torre, distribuição, respostas por dia, maiores grupos, tabela de participantes, lista para WhatsApp com opções e exportação/compartilhamento de PDF e a **gestão da lista pública** (adicionar, marcar sem doces, excluir/restaurar e exportar o `participantes.json`). |
 
 Para entrar na Administração: toque em **🔒 Administração** no rodapé da tela pública e informe a chave.
