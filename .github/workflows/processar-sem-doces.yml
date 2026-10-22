@@ -1,0 +1,73 @@
+name: Processar solicitação de apartamento sem doces
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  atualizar-lista:
+    if: github.event.issue.user.login == 'pycriador' && startsWith(github.event.issue.title, '[SEM DOCES]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter repositório
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Validar pedido e atualizar JSON
+        id: atualizar
+        env:
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const { execFileSync } = require('node:child_process');
+          const event = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+          const issue = event.issue;
+          const body = String(issue.body || '');
+          const fail = (message) => {
+            execFileSync('gh', ['issue', 'comment', String(issue.number), '--repo', process.env.GH_REPO, '--body', message], { env: process.env, stdio: 'inherit' });
+            process.exit(1);
+          };
+          if (issue.user?.login !== 'pycriador' || !issue.title?.startsWith('[SEM DOCES]')) fail('Solicitação não processada: autor ou título não autorizado.');
+          if (!body.includes('SOLICITACAO_SEM_DOCES_V1')) fail('Solicitação não processada: formato inválido.');
+          const towerMatch = body.match(/^Torre:\s*([A-F])\s*$/im);
+          const aptMatch = body.match(/^Apartamento:\s*(\d{1,4})\s*$/im);
+          if (!towerMatch || !aptMatch) fail('Solicitação não processada: bloco ou apartamento inválido.');
+          const torre = towerMatch[1].toUpperCase();
+          const apto = Number(aptMatch[1]);
+          if (!Number.isInteger(apto) || apto < 1 || apto > 9999) fail('Solicitação não processada: número do apartamento inválido.');
+          const file = 'participantes.json';
+          const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+          if (!Array.isArray(data.apartamentos) || !Array.isArray(data.removidos)) fail('JSON não contém as listas esperadas; nenhum dado foi alterado.');
+          if (torre === 'A' && apto === 231) fail('Apartamento A231 está na regra de exclusão e não pode ser adicionado à lista pública.');
+          const item = data.apartamentos.find(x => String(x.torre).toUpperCase() === torre && Number(x.apto) === apto);
+          if (!item) fail('Apartamento ' + torre + apto + ' não foi encontrado na lista pública. Nenhuma alteração foi feita.');
+          const jaEstava = item.acabou === true;
+          if (!jaEstava) {
+            item.acabou = true;
+            data.editadoEm = new Date().toISOString();
+            data.atualizado = new Intl.DateTimeFormat('pt-BR', {
+              timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit',
+              year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false
+            }).format(new Date());
+            fs.writeFileSync(file, JSON.stringify(data, null, 2) + '\n');
+            execFileSync('git', ['config', 'user.name', 'github-actions[bot]']);
+            execFileSync('git', ['config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com']);
+            execFileSync('git', ['add', file]);
+            execFileSync('git', ['commit', '-m', 'Marca torre ' + torre + ' apartamento ' + apto + ' como sem doces']);
+            execFileSync('git', ['push', 'origin', 'HEAD:main']);
+          }
+          const msg = jaEstava
+            ? 'Nenhuma alteração necessária: torre ' + torre + ', apartamento ' + apto + ' já estava marcado como sem doces.'
+            : 'Atualização concluída: torre ' + torre + ', apartamento ' + apto + ' foi marcado como sem doces. O arquivo participantes.json foi atualizado na branch main.';
+          execFileSync('gh', ['issue', 'comment', String(issue.number), '--repo', process.env.GH_REPO, '--body', msg], { env: process.env, stdio: 'inherit' });
+          execFileSync('gh', ['issue', 'close', String(issue.number), '--repo', process.env.GH_REPO], { env: process.env, stdio: 'inherit' });
+          NODE
