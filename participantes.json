@@ -162,7 +162,7 @@
     {
       "torre": "D",
       "apto": 16,
-      "acabou": true,
+      "acabou": false,
       "origem": "planilha"
     },
     {
