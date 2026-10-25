@@ -1,4 +1,4 @@
-{"versao":1,"atualizado":"23/10/2026 17:13","editadoEm":null,
+{"versao":1,"atualizado":"24/10/2026 23:40","editadoEm":null,
 "apartamentos":[
  {"torre":"A","apto":41,"acabou":false,"origem":"planilha"},
  {"torre":"A","apto":44,"acabou":false,"origem":"planilha"},
@@ -38,6 +38,7 @@
  {"torre":"D","apto":43,"acabou":false,"origem":"planilha"},
  {"torre":"D","apto":54,"acabou":false,"origem":"planilha"},
  {"torre":"D","apto":96,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":115,"acabou":false,"origem":"planilha"},
  {"torre":"D","apto":165,"acabou":false,"origem":"planilha"},
  {"torre":"D","apto":176,"acabou":false,"origem":"planilha"},
  {"torre":"D","apto":245,"acabou":false,"origem":"planilha"},
@@ -56,6 +57,7 @@
  {"torre":"E","apto":251,"acabou":false,"origem":"planilha"},
  {"torre":"E","apto":283,"acabou":false,"origem":"planilha"},
  {"torre":"F","apto":14,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":41,"acabou":false,"origem":"planilha"},
  {"torre":"F","apto":53,"acabou":false,"origem":"planilha"},
  {"torre":"F","apto":61,"acabou":false,"origem":"planilha"},
  {"torre":"F","apto":153,"acabou":false,"origem":"planilha"},
