@@ -1,4 +1,4 @@
-{"versao":1,"atualizado":"24/10/2026 23:40","editadoEm":null,
+{"versao":1,"atualizado":"24/10/2026 23:43","editadoEm":null,
 "apartamentos":[
  {"torre":"A","apto":41,"acabou":false,"origem":"planilha"},
  {"torre":"A","apto":44,"acabou":false,"origem":"planilha"},
@@ -6,6 +6,7 @@
  {"torre":"A","apto":112,"acabou":false,"origem":"planilha"},
  {"torre":"A","apto":113,"acabou":false,"origem":"planilha"},
  {"torre":"A","apto":203,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":231,"acabou":true,"origem":"planilha"},
  {"torre":"A","apto":252,"acabou":false,"origem":"planilha"},
  {"torre":"A","apto":271,"acabou":false,"origem":"planilha"},
  {"torre":"B","apto":24,"acabou":false,"origem":"planilha"},
@@ -64,5 +65,5 @@
  {"torre":"F","apto":244,"acabou":false,"origem":"planilha"}
 ],
 "removidos":[
- {"torre":"A","apto":231}
+
 ]}

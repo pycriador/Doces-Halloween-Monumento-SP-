@@ -19,7 +19,7 @@ Para entrar na Administração: toque em **🔒 Administração** no rodapé da 
 3. O apartamento é **normalizado sem a letra do bloco** (`55B`, `162 B`, `F 53` → `55`, `162`, `53`).
 4. **Quantidade de crianças em branco = 0** (o apartamento participa).
 5. **Duplicados** (mesmo apartamento + torre): vale a resposta mais recente.
-6. Apartamentos listados em `src/regras.json` (`semDoces`, formato `A231`) **não entregam doces**: contam as crianças, mas ficam fora da lista pública (entram em `removidos` na primeira geração; depois vale o `participantes.json`).
+6. Apartamentos listados em `src/regras.json` (`semDoces`, formato `A231`) ficam fora da lista pública (entram em `removidos` na primeira geração; depois vale o `participantes.json`). **Hoje a lista está vazia**: o 231 A voltou à lista pública, marcado como *sem doces* (riscado).
 
 ## Lista pública: `participantes.json`
 
