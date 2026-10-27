@@ -38,7 +38,7 @@ else if (cmd === 'build') {
   const removidos = atual ? (atual.removidos || []) : regras.semDoces.map(s => { const m = s.match(/^([A-Z]+)(\d+)$/); return { torre: m[1], apto: +m[2] }; });
   const rem = new Set(removidos.map(r => kk(r.torre, r.apto))), velha = new Map((atual?.apartamentos || []).map(x => [kk(x.torre, x.apto), x]));
   const lista = dados.filter(d => !rem.has(kk(d.torre, d.apto))).map(d => ({ torre: d.torre, apto: d.apto, acabou: !!velha.get(kk(d.torre, d.apto))?.acabou, origem: 'planilha' }));
-  (atual?.apartamentos || []).filter(x => x.origem === 'manual' && !lista.some(l => l.torre === x.torre && l.apto === x.apto)).forEach(x => lista.push({ torre: x.torre, apto: x.apto, acabou: !!x.acabou, origem: 'manual' }));
+  (atual?.apartamentos || []).filter(x => (x.origem === 'manual' || x.acabou) && !lista.some(l => l.torre === x.torre && l.apto === x.apto)).forEach(x => lista.push({ torre: x.torre, apto: x.apto, acabou: !!x.acabou, origem: 'manual' }));
   lista.sort((a, b) => a.torre.localeCompare(b.torre) || a.apto - b.apto);
   const saida = { versao: 1, atualizado, editadoEm: null, apartamentos: lista, removidos };
   const um = o => ' ' + JSON.stringify(o);
