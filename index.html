@@ -100,7 +100,7 @@ const todos = () => T.reduce((a,t)=>a.concat(P[t]),[]);
 const legenda = l => l.some(x=>x.acabou) ? '\n\n_Riscados: os doces já acabaram_' : '';
 const msg = t => t === '*' ? `${cab}\n✅ *${n(todos().length)}*\n\n` + T.map(bloco).join('\n\n') + legenda(todos()) : `${cab}\n${bloco(t)}` + legenda(P[t]);
 function mostrar(t){
-  sel = t; if(t!=='*' && !$('avTorre').value) $('avTorre').value = t;
+  sel = t; if(t!=='*' && $('avTorre') && !$('avTorre').value) $('avTorre').value = t;
   [...$('bts').children].forEach(b=>b.classList.toggle('on',b.dataset.t===t));
   const l = t==='*' ? todos() : P[t], k = l.filter(x=>x.acabou).length;
   $('rTit').textContent = (t==='*' ? 'Todas as torres' : `Torre ${t}`) + ` · ${n(l.length)}` + (k ? ` · ${k} sem doces` : '');
@@ -121,11 +121,11 @@ function iniciar(d){
         hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
       }).format(data).replace(',', '');
     }
-    const legada = String(valor).match(/^(\\d{2})\\/(\\d{2})\\/(\\d{4})[, ]+([0-2]\\d):([0-5]\\d)$/);
+    const legada = String(valor).match(/^(\d{2})\/(\d{2})\/(\d{4})[, ]+([0-2]\d):([0-5]\d)$/);
     return legada ? `${legada[1]}/${legada[2]}/${legada[3]} ${legada[4]}:${legada[5]}` : String(valor);
   }
   $('at').textContent = formatarData(dataAtualizacao);
-  const cur = $('avTorre').value; $('avTorre').innerHTML = '<option value="">Torre</option>' + T.map(t=>`<option>${t}</option>`).join(''); $('avTorre').value = cur;
+  if($('avTorre')){ const cur = $('avTorre').value; $('avTorre').innerHTML = '<option value="">Torre</option>' + T.map(t=>`<option>${t}</option>`).join(''); $('avTorre').value = cur; }
   $('bts').innerHTML = [...T,'*'].map(t=>`<button data-t="${t}">${t==='*'?'Todas':'Torre '+t}</button>`).join('');
   if(sel && (sel==='*' || P[sel])) mostrar(sel); else { sel = null; $('res').hidden = true; }
 }
