@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /* Gera o index.html (tela pública + área de Administração criptografada).
    node tools/build.mjs init                 -> cria keystore.json e imprime o SEGREDO (uma única vez)
-   node tools/build.mjs build rows.json [participantes.atual.json] -> gera index.html + participantes.json (mescla edições manuais; não precisa do segredo)
+   node tools/build.mjs build rows.json [participantes.atual.json] [index.atual.html]  -> com o 3º argumento, NÃO regenera a página pública: troca só o bloco criptografado da Administração do index.atual.html.
+   (antigo:) node tools/build.mjs build rows.json [participantes.atual.json] -> gera index.html + participantes.json (mescla edições manuais; não precisa do segredo)
    SEGREDO=... node tools/build.mjs decrypt [index.html] > admin.html   -> descriptografa a Administração */
 import fs from 'node:fs'; import path from 'node:path'; import crypto from 'node:crypto';
 const raiz = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
@@ -10,7 +11,7 @@ const norm = s => String(s).replace(/\s+/g, '').toLowerCase();
 const OAEP = { padding: crypto.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: 'sha256' };
 const gcmEnc = (key, iv, buf) => { const c = crypto.createCipheriv('aes-256-gcm', key, iv); return Buffer.concat([c.update(buf), c.final(), c.getAuthTag()]); };
 const gcmDec = (key, iv, buf) => { const d = crypto.createDecipheriv('aes-256-gcm', key, iv); d.setAuthTag(buf.subarray(-16)); return Buffer.concat([d.update(buf.subarray(0, -16)), d.final()]); };
-const [cmd, arg, arg2] = process.argv.slice(2);
+const [cmd, arg, arg2, arg3] = process.argv.slice(2);
 
 if (cmd === 'init') {
   if (fs.existsSync(R('keystore.json'))) { console.error('keystore.json já existe (apague para gerar outro segredo).'); process.exit(1); }
@@ -49,7 +50,11 @@ else if (cmd === 'build') {
   const w = crypto.publicEncrypt({ key: crypto.createPublicKey({ key: de64(ks.pub), format: 'der', type: 'spki' }), ...OAEP }, dek);
   const pl = { w: b64(w), iv: b64(iv), ct: b64(gcmEnc(dek, iv, Buffer.from(admin, 'utf8'))) };
   const pub = JSON.stringify(saida);
-  fs.writeFileSync(R('index.html'), fs.readFileSync(R('src/public.template.html'), 'utf8')
+  if (arg3) {   /* modo seguro: preserva a página pública do GitHub e troca só a Administração criptografada */
+    const base = fs.readFileSync(arg3, 'utf8'), re = /(<script type="application\/json" id="pl">).*?(<\/script>)/s;
+    if (!re.test(base)) throw new Error('index atual sem bloco id="pl"');
+    fs.writeFileSync(R('index.html'), base.replace(re, (m, a, b) => a + JSON.stringify(pl) + b));
+  } else fs.writeFileSync(R('index.html'), fs.readFileSync(R('src/public.template.html'), 'utf8')
     .replace('__PUBLICO__', () => pub).replace('__KS__', () => JSON.stringify(ks)).replace('__PL__', () => JSON.stringify(pl)));
   console.log(`index.html gerado: ${dados.length} apartamentos, ${lista.length} na lista pública, ${dados.reduce((s, d) => s + d.criancas, 0)} crianças`);
 }
