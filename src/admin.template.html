@@ -73,7 +73,6 @@ input[type=text],input[type=number]{font:inherit;border-radius:10px;border:1px s
  </section>
  <section class="grid">
   <div class="card"><h2>🏢 Resumo por torre</h2><table id="tTorres"></table></div>
-  <div class="card"><h2>🏆 Maiores grupos de crianças (top 5)</h2><div id="cTop"></div></div>
  </section>
  <section class="card">
   <h2>📋 Participantes</h2>
@@ -140,12 +139,11 @@ function render(){
   const total = soma(dados), nApt = dados.length, comCri = dados.filter(d=>d.criancas>0).length;
   const porTorre = torres.map(t=>{const l=dados.filter(d=>d.torre===t);return {t,apts:l.length,cri:soma(l)}});
   const lider = [...porTorre].sort((a,b)=>b.cri-a.cri)[0];
-  const maxC = Math.max(...dados.map(d=>d.criancas),0), maiores = dados.filter(d=>d.criancas===maxC);
-  const ult = DADOS_BRUTOS.map(r=>new Date(r[0])).reduce((a,b)=>a>b?a:b,new Date(0));
+    const ult = DADOS_BRUTOS.map(r=>new Date(r[0])).reduce((a,b)=>a>b?a:b,new Date(0));
   $('atualizado').textContent = fmtData(ult,true);
   const kp = [[nApt,'Apartamentos participantes'],[entregam.length,'Aptos. que entregam doces'],[total,'Total de crianças'],[nf.format(total/(nApt||1)),'Média de crianças por apto.'],
     [comCri,`Aptos. com crianças (${nf.format(comCri/(nApt||1)*100)}%)`],[nApt-comCri,'Aptos. sem crianças (0)'],
-    [lider?lider.t:'—',`Torre com mais crianças (${lider?lider.cri:0})`],[maxC,'Maior grupo: '+maiores.map(d=>`Apto ${d.apto}/${d.torre}`).join(', ')]];
+    [lider?lider.t:'—',`Torre com mais crianças (${lider?lider.cri:0})`]];
   window.KPIS = kp; $('kpis').innerHTML = kp.map(([v,l])=>`<div class="kpi"><b>${v}</b><small>${esc(l)}</small></div>`).join('');
   barras('cCriancas',porTorre.map(p=>({rot:'Torre '+p.t,valor:p.cri,cor:cor(p.t)})));
   barras('cAptos',porTorre.map(p=>({rot:'Torre '+p.t,valor:p.apts,cor:cor(p.t)})));
@@ -156,7 +154,6 @@ function render(){
   $('tTorres').innerHTML = '<tr><th>Torre</th><th class="n">Aptos.</th><th class="n">Crianças</th><th class="n">Média</th><th class="n">% crianças</th></tr>' +
     porTorre.map(p=>`<tr><td><b style="color:${cor(p.t)}">●</b> Torre ${p.t}</td><td class="n">${p.apts}</td><td class="n">${p.cri}</td><td class="n">${nf.format(p.cri/(p.apts||1))}</td><td class="n">${nf.format(p.cri/(total||1)*100)}%</td></tr>`).join('') +
     `<tr><th>Total</th><th class="n">${nApt}</th><th class="n">${total}</th><th class="n">${nf.format(total/(nApt||1))}</th><th class="n">100%</th></tr>`;
-  barras('cTop',[...dados].sort((a,b)=>b.criancas-a.criancas||a.torre.localeCompare(b.torre)||a.apto-b.apto).slice(0,5).map(d=>({rot:`Apto ${d.apto} · ${d.torre}`,valor:d.criancas,cor:cor(d.torre)})));
   $('fTorre').innerHTML = '<option value="">Todas as torres</option>' + torres.map(t=>`<option>${t}</option>`).join('');
   tabela(); whatsapp();
 }
@@ -229,7 +226,7 @@ function relatorioPDF(){
   const xs=[0,90,160,240,320], linhas=[...$('tTorres').rows].map(r=>[...r.cells].map(k=>k.textContent.replace(/^●\s*/,'').trim()));
   garante(40+linhas.length*16); T('Resumo por torre',M,y-12,12,true); y-=28;
   linhas.forEach((l,i)=>{const b=i===0||i===linhas.length-1; l.forEach((v,k)=>T(v,M+xs[k],y-9,9,b,i===0?CIN:'0 0 0')); y-=16;}); y-=12;
-  barrasPDF('cDistrib'); barrasPDF('cTop'); barrasPDF('cDia');
+  barrasPDF('cDistrib'); barrasPDF('cDia');
   garante(60); T(`Apartamentos participantes (${LISTA.apartamentos.length})`,M,y-12,12,true); y-=28;
   const gl={}; LISTA.apartamentos.forEach(x=>(gl[x.torre]=gl[x.torre]||[]).push(x));
   Object.keys(gl).sort().forEach(t=>{const l=gl[t].sort((a,b)=>a.apto-b.apto), ls=quebra(l.map(x=>x.apto+(x.acabou?' (sem doces)':'')).join(', '),95);
