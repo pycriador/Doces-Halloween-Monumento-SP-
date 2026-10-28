@@ -1,7 +1,7 @@
 {
   "versao": 1,
-  "atualizado": "28/10/2026, 10:59",
-  "editadoEm": "2026-10-28T13:59:54.549Z",
+  "atualizado": "28/10/2026, 11:11",
+  "editadoEm": "2026-10-28T14:11:50.676Z",
   "apartamentos": [
     {
       "torre": "A",
@@ -78,7 +78,7 @@
     {
       "torre": "B",
       "apto": 24,
-      "acabou": false,
+      "acabou": true,
       "origem": "planilha"
     },
     {
