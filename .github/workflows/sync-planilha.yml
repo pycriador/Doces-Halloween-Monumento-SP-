@@ -1,0 +1,43 @@
+name: Sincronizar planilha
+
+# Só roda quando alguém dispara manualmente (pela Administração do site ou pela aba Actions do GitHub).
+# Não há agendamento automático: a decisão de "quando" é sempre humana.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-planilha
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Baixar planilha (CSV público) e gerar rows.json
+        env:
+          SHEET_CSV_URL: ${{ secrets.SHEET_CSV_URL }}
+        run: node tools/sync_planilha.mjs "$SHEET_CSV_URL" /tmp/rows.json
+
+      - name: Gerar index.html e participantes.json (preserva edições manuais)
+        run: node tools/build.mjs build /tmp/rows.json participantes.json
+
+      - name: Publicar, se algo mudou
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html participantes.json
+          if git diff --cached --quiet; then
+            echo "Nada novo na planilha."
+          else
+            git commit -m "Sincroniza planilha automaticamente"
+            git push
+          fi

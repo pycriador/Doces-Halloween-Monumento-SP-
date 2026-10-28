@@ -36,14 +36,14 @@ th{color:var(--mu);font-weight:600}td.n,th.n{text-align:right}
 textarea{width:100%;min-height:260px;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;background:#150d26;color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:10px}
 label{color:var(--mu);font-size:.9rem}
 details summary{cursor:pointer;color:var(--or);font-weight:600}
-.ok{color:#7ddc7d}
-input[type=text],input[type=number]{font:inherit;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:8px 14px}
+.ok{color:#7ddc7d}.err{color:#ff7b7b}
+input[type=text],input[type=number],input[type=password]{font:inherit;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:8px 14px}
 .riscado{text-decoration:line-through;opacity:.55}.chip{display:inline-block;background:#2b1d47;border-radius:999px;padding:4px 10px;margin:3px}.gh{margin:14px 0 4px;font-size:.95rem}
 @page{margin:12mm}
 @media print{
  :root{--bg:#fff;--card:#fff;--tx:#111;--mu:#555;--bd:#ccc;--or:#c25a00}
  body{background:#fff}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
- .noprint,#wpp,#gestao{display:none!important}
+ .noprint,#wpp,#gestao,#sync{display:none!important}
  .card,.kpi{break-inside:avoid}.scroll{max-height:none;overflow:visible}
  .trilho{background:#eee}
 }
@@ -59,6 +59,7 @@ input[type=text],input[type=number]{font:inherit;border-radius:10px;border:1px s
   <button onclick="exportarPDF(true)">📤 Compartilhar PDF</button>
   <button class="sec" onclick="exportarPDF(false)">⬇️ Baixar PDF</button>
   <button class="sec" onclick="document.getElementById('wpp').scrollIntoView({behavior:'smooth'})">💬 Lista p/ WhatsApp</button>
+  <button class="sec" onclick="document.getElementById('sync').scrollIntoView({behavior:'smooth'})">🔄 Sincronizar planilha</button>
   <span id="msgPdf" class="sub"></span>
   <button class="sec" onclick="location.reload()">🔒 Sair</button>
  </div>
@@ -99,6 +100,17 @@ input[type=text],input[type=number]{font:inherit;border-radius:10px;border:1px s
   </div>
   <div><span id="gMsg" class="ok"></span> <span id="gStatus" class="sub"></span></div>
   <p class="sub">Depois de baixar, suba o arquivo no GitHub (Add file → Upload files) com o nome <b>participantes.json</b>, substituindo o atual. Em ~1 minuto a tela pública atualiza.</p>
+ </section>
+ <section class="card noprint" id="sync">
+  <h2>🔄 Sincronizar planilha</h2>
+  <p class="sub">Busca as respostas mais recentes da planilha (CSV público do Google Sheets) e publica um <b>participantes.json</b> e <b>index.html</b> atualizados, preservando as edições manuais (sem doces, adicionados, excluídos). Roda num workflow do GitHub Actions — não precisa do computador do Claude nem de rodar nada localmente.</p>
+  <div class="tools">
+   <input type="password" id="syncToken" placeholder="Token do GitHub (fine-grained, só deste repositório)" style="min-width:320px;flex:1">
+   <label><input type="checkbox" id="syncVer"> mostrar</label>
+   <button id="syncBtn">▶️ Executar sincronização agora</button>
+  </div>
+  <p class="sub">O token não é salvo em nenhum lugar: fica só na memória desta aba enquanto ela estiver aberta. Crie um token <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained</a> restrito ao repositório <b>Doces-Halloween-Monumento-SP-</b>, com permissão <b>Actions: Read and write</b> (e Contents: Read).</p>
+  <div><span id="syncStatus" class="sub"></span> <a id="syncLink" href="#" target="_blank" rel="noopener" hidden>Ver execução no GitHub →</a></div>
  </section>
  <section class="card" id="wpp">
   <h2>💬 Lista de apartamentos para o WhatsApp</h2>
@@ -315,6 +327,42 @@ function gInit(){
 }
 render();
 gInit();
+/* ---------- Sincronizar planilha (dispara o workflow do GitHub Actions com o token do usuário) ---------- */
+const SYNC_REPO = 'pycriador/Doces-Halloween-Monumento-SP-', SYNC_WF = 'sync-planilha.yml';
+let syncPoll = null;
+const syncGh = (path, token, opts={}) => fetch(`https://api.github.com/repos/${SYNC_REPO}${path}`, { ...opts,
+  headers: { 'Authorization':'Bearer '+token, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28', ...(opts.headers||{}) } });
+function syncMsg(texto,cls){ const s=$('syncStatus'); s.textContent=texto; s.className=cls||'sub'; }
+async function syncAcompanhar(token,desde,tentativa=0){
+  clearTimeout(syncPoll);
+  if(tentativa>40){ syncMsg('Não encontrei a execução a tempo. Confira na aba Actions do GitHub.','err'); $('syncBtn').disabled=false; return; }
+  try{
+    const r = await syncGh(`/actions/workflows/${SYNC_WF}/runs?per_page=5`, token);
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const j = await r.json();
+    const run = (j.workflow_runs||[]).find(x=>new Date(x.created_at).getTime() >= desde-5000);
+    if(!run){ syncPoll=setTimeout(()=>syncAcompanhar(token,desde,tentativa+1),3000); return; }
+    $('syncLink').href = run.html_url; $('syncLink').hidden = false;
+    if(run.status!=='completed'){ syncMsg(`Executando… (${run.status})`); syncPoll=setTimeout(()=>syncAcompanhar(token,desde,tentativa+1),4000); return; }
+    if(run.conclusion==='success'){ syncMsg('✔ Sincronizado! A tela pública atualiza em instantes.','ok'); }
+    else{ syncMsg('❌ A execução falhou ('+run.conclusion+'). Veja os detalhes no link acima.','err'); }
+    $('syncBtn').disabled=false;
+  }catch(e){ syncMsg('Erro ao verificar status: '+e.message,'err'); $('syncBtn').disabled=false; }
+}
+$('syncBtn').onclick = async () => {
+  const token = $('syncToken').value.trim();
+  if(!token){ syncMsg('Informe o token do GitHub.','err'); return; }
+  $('syncBtn').disabled = true; $('syncLink').hidden = true;
+  syncMsg('Disparando sincronização…');
+  const desde = Date.now();
+  try{
+    const r = await syncGh(`/actions/workflows/${SYNC_WF}/dispatches`, token, { method:'POST', body: JSON.stringify({ref:'main'}) });
+    if(r.status!==204){ const j = await r.json().catch(()=>({})); throw new Error(j.message || ('HTTP '+r.status)); }
+    syncMsg('Disparado! Aguardando o GitHub iniciar a execução…');
+    syncAcompanhar(token,desde);
+  }catch(e){ syncMsg('Erro ao disparar: '+e.message,'err'); $('syncBtn').disabled=false; }
+};
+$('syncVer').onchange = () => $('syncToken').type = $('syncVer').checked ? 'text' : 'password';
 </script>
 </body>
 </html>

@@ -8,7 +8,7 @@ Painel da coleta de doces do condomínio, publicado com **GitHub Pages**:
 | Tela | Quem vê | O que mostra |
 |---|---|---|
 | **Pública** (`index.html`) | Todos | Botões por torre (A–F e "Todas"). Ao tocar, aparecem os apartamentos participantes da torre (os que **ficaram sem doces aparecem riscados** na tela) e a mensagem pronta para o WhatsApp (copiar ou abrir no WhatsApp). A **mensagem** só lista quem ainda tem doces (quem ficou sem doces não entra) e termina com a **quantidade de crianças por torre e o total** (agregado; não mostra a quantidade por apartamento). A lista vem do arquivo `participantes.json`. Tem o botão **💬 Avisar que meus doces acabaram**, que abre o WhatsApp do Willian (11 96382-0374) com a mensagem pronta; o morador escolhe a torre e informa o apartamento, que são acrescentados ao fim da mensagem. A data **"Atualizado em"** é a da publicação (fuso de São Paulo) e muda a cada build. |
-| **Administração** | Só quem tem a chave | Todos os dashboards: indicadores, crianças e apartamentos por torre, distribuição, respostas por dia, tabela de participantes, lista para WhatsApp com opções e exportação/compartilhamento de PDF e a **gestão da lista pública** (adicionar, marcar sem doces, excluir/restaurar e exportar o `participantes.json`). |
+| **Administração** | Só quem tem a chave | Todos os dashboards: indicadores, crianças e apartamentos por torre, distribuição, respostas por dia, tabela de participantes, lista para WhatsApp com opções e exportação/compartilhamento de PDF, a **gestão da lista pública** (adicionar, marcar sem doces, excluir/restaurar e exportar o `participantes.json`) e a tela **🔄 Sincronizar planilha**, que dispara a atualização automática a partir das respostas mais recentes. |
 
 Para entrar na Administração: toque em **🔒 Administração** no rodapé da tela pública e informe a chave.
 
@@ -77,6 +77,15 @@ git add index.html participantes.json && git commit -m "Atualiza dados" && git p
 
 Basta enviar o novo Excel ao Claude: ele aplica as regras e publica (precisa de um token do GitHub do repositório).
 
+## Sincronização automática pela Administração
+
+A Administração tem uma tela **🔄 Sincronizar planilha** que dispara, sob demanda (nunca automaticamente/agendado — quem decide "quando" é sempre uma pessoa), um workflow do GitHub Actions que busca as respostas mais recentes direto do Google Sheets (exportado como CSV público, sem usar a API do Google) e publica `index.html` + `participantes.json` atualizados, preservando as edições manuais da mesma forma que o fluxo com o Claude.
+
+- **Token do GitHub:** cada pessoa que for usar essa tela precisa criar o próprio token [fine-grained](https://github.com/settings/personal-access-tokens/new), restrito a este repositório, com permissão **Actions: Read and write** (e **Contents: Read**). O token é digitado na hora, fica só na memória da aba (não é salvo em lugar nenhum) e é usado para chamar a API do GitHub diretamente do navegador — por isso a execução aparece no GitHub como disparada pelo próprio usuário, não por um robô.
+- **Link da planilha:** fica guardado como *secret* do GitHub Actions (`SHEET_CSV_URL`), não no código — como o repositório é público, colocar o link direto no workflow deixaria a planilha completa (inclusive colunas que o site não usa) visível para qualquer pessoa.
+- **O que roda:** `.github/workflows/sync-planilha.yml` → `tools/sync_planilha.mjs` (baixa o CSV e gera o `rows.json`) → `tools/build.mjs build` (mesma lógica do fluxo manual) → commit automático (autor `github-actions[bot]`) só se algo mudou.
+- Também dá para disparar pela própria aba **Actions** do GitHub (botão "Run workflow"), sem passar pela Administração.
+
 ## Estrutura
 
 ```
@@ -89,6 +98,8 @@ src/limpar.js              # regras de limpeza
 src/regras.json            # apartamentos que não entregam doces (semente inicial de `removidos`)
 tools/build.mjs            # init | build | decrypt
 tools/xlsx_para_json.py    # Excel -> JSON
+tools/sync_planilha.mjs    # CSV público do Google Sheets -> JSON (usado pelo workflow de sincronização)
+.github/workflows/sync-planilha.yml  # workflow disparado manualmente pela Administração ou pela aba Actions
 ```
 
 ## Trocar a chave de acesso
