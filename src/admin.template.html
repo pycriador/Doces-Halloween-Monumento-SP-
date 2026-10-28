@@ -261,9 +261,14 @@ function gNorm(d){
 }
 const gOrdena = () => LISTA.apartamentos.sort((a,b)=>a.torre.localeCompare(b.torre)||a.apto-b.apto);
 const gAcha = k => LISTA.apartamentos.find(x=>gk(x.torre,x.apto)===k);
+function gCriancasAgregadas(){                                            // recalcula a partir dos dados da planilha, não confia em valor antigo
+  const porTorre = {};
+  LISTA.apartamentos.filter(x=>!x.acabou).forEach(x=>{ const d = dados.find(d=>d.torre===x.torre&&d.apto===x.apto); porTorre[x.torre] = (porTorre[x.torre]||0) + (d ? d.criancas : 0); });
+  return { porTorre, total: Object.values(porTorre).reduce((a,b)=>a+b,0) };
+}
 function gJson(){
-  gOrdena(); const l = o => ' '+JSON.stringify(o);
-  return `{"versao":1,"atualizado":${JSON.stringify(LISTA.atualizado||null)},"editadoEm":${JSON.stringify(fmtData(new Date(),true))},\n"apartamentos":[\n${LISTA.apartamentos.map(x=>l({torre:x.torre,apto:x.apto,acabou:!!x.acabou,origem:x.origem||'planilha'})).join(',\n')}\n],\n"removidos":[\n${(LISTA.removidos||[]).map(x=>l({torre:x.torre,apto:x.apto})).join(',\n')}\n]}\n`;
+  gOrdena(); const l = o => ' '+JSON.stringify(o), { porTorre, total } = gCriancasAgregadas();
+  return `{"versao":1,"atualizado":${JSON.stringify(LISTA.atualizado||null)},"editadoEm":${JSON.stringify(fmtData(new Date(),true))},\n"apartamentos":[\n${LISTA.apartamentos.map(x=>l({torre:x.torre,apto:x.apto,acabou:!!x.acabou,origem:x.origem||'planilha'})).join(',\n')}\n],\n"removidos":[\n${(LISTA.removidos||[]).map(x=>l({torre:x.torre,apto:x.apto})).join(',\n')}\n],\n"criancasPorTorre":${JSON.stringify(porTorre)},\n"criancasTotal":${total}}\n`;
 }
 function gRender(){
   gOrdena(); const g = {}; LISTA.apartamentos.forEach(x=>(g[x.torre]=g[x.torre]||[]).push(x));

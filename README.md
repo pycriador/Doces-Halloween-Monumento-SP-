@@ -7,7 +7,7 @@ Painel da coleta de doces do condomínio, publicado com **GitHub Pages**:
 
 | Tela | Quem vê | O que mostra |
 |---|---|---|
-| **Pública** (`index.html`) | Todos | Botões por torre (A–F e "Todas"). Ao tocar, aparecem os apartamentos participantes da torre e a mensagem pronta para o WhatsApp (copiar ou abrir no WhatsApp). Os apartamentos que **ficaram sem doces aparecem riscados** (e como `~riscado~` na mensagem). A lista vem do arquivo `participantes.json`. Tem o botão **💬 Avisar que meus doces acabaram**, que abre o WhatsApp do Willian (11 96382-0374) com a mensagem pronta; o morador escolhe a torre e informa o apartamento, que são acrescentados ao fim da mensagem. A data **"Atualizado em"** é a da publicação (fuso de São Paulo) e muda a cada build. **Não mostra quantidade de crianças.** |
+| **Pública** (`index.html`) | Todos | Botões por torre (A–F e "Todas"). Ao tocar, aparecem os apartamentos participantes da torre (os que **ficaram sem doces aparecem riscados** na tela) e a mensagem pronta para o WhatsApp (copiar ou abrir no WhatsApp). A **mensagem** só lista quem ainda tem doces (quem ficou sem doces não entra) e termina com a **quantidade de crianças por torre e o total** (agregado; não mostra a quantidade por apartamento). A lista vem do arquivo `participantes.json`. Tem o botão **💬 Avisar que meus doces acabaram**, que abre o WhatsApp do Willian (11 96382-0374) com a mensagem pronta; o morador escolhe a torre e informa o apartamento, que são acrescentados ao fim da mensagem. A data **"Atualizado em"** é a da publicação (fuso de São Paulo) e muda a cada build. |
 | **Administração** | Só quem tem a chave | Todos os dashboards: indicadores, crianças e apartamentos por torre, distribuição, respostas por dia, tabela de participantes, lista para WhatsApp com opções e exportação/compartilhamento de PDF e a **gestão da lista pública** (adicionar, marcar sem doces, excluir/restaurar e exportar o `participantes.json`). |
 
 Para entrar na Administração: toque em **🔒 Administração** no rodapé da tela pública e informe a chave.
@@ -28,12 +28,14 @@ A tela pública lê este arquivo a cada acesso (se não conseguir, usa a cópia 
 ```json
 { "versao": 1, "atualizado": "21/10/2026 09:05", "editadoEm": null,
   "apartamentos": [ { "torre": "A", "apto": 41, "acabou": false, "origem": "planilha" } ],
-  "removidos":    [ { "torre": "A", "apto": 231 } ] }
+  "removidos":    [ { "torre": "A", "apto": 231 } ],
+  "criancasPorTorre": { "A": 14 }, "criancasTotal": 14 }
 ```
 
 - `acabou: true` → o apartamento aparece **riscado** (os doces acabaram).
 - `origem: "manual"` → adicionado à mão (não veio da planilha).
 - `removidos` → apartamentos da planilha que ficaram de fora da lista (ex.: o 231 A, que não entrega doces).
+- `criancasPorTorre` / `criancasTotal` → total de crianças por torre e geral, só de quem ainda tem doces (`acabou: false`); usado no fim da mensagem da tela pública. Recalculado a cada build e também pela Administração sempre que ela gera o `participantes.json` (⬇️ Baixar / 📋 Copiar JSON).
 
 **Editar sem o Claude (por exemplo, se os créditos acabarem):** entre na Administração → **🛠️ Lista pública**, adicione apartamentos, marque *Acabaram os doces*, exclua ou restaure, toque em **⬇️ Baixar participantes.json** (ou **📋 Copiar JSON**) e suba no GitHub (**Add file → Upload files**, substituindo o arquivo; ou edite o arquivo e cole o JSON). Em cerca de 1 minuto a tela pública atualiza. Também dá para editar o JSON direto no GitHub.
 

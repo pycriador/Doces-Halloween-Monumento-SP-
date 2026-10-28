@@ -40,9 +40,14 @@ else if (cmd === 'build') {
   const lista = dados.filter(d => !rem.has(kk(d.torre, d.apto))).map(d => ({ torre: d.torre, apto: d.apto, acabou: !!velha.get(kk(d.torre, d.apto))?.acabou, origem: 'planilha' }));
   (atual?.apartamentos || []).filter(x => (x.origem === 'manual' || x.acabou) && !lista.some(l => l.torre === x.torre && l.apto === x.apto)).forEach(x => lista.push({ torre: x.torre, apto: x.apto, acabou: !!x.acabou, origem: 'manual' }));
   lista.sort((a, b) => a.torre.localeCompare(b.torre) || a.apto - b.apto);
-  const saida = { versao: 1, atualizado, editadoEm: null, apartamentos: lista, removidos };
+  /* total de crianças por torre (só quem ainda tem doces) e geral: agregado, sem expor a quantidade por apartamento */
+  const criancasApto = new Map(dados.map(d => [kk(d.torre, d.apto), d.criancas]));
+  const criancasPorTorre = {};
+  lista.filter(x => !x.acabou).forEach(x => { criancasPorTorre[x.torre] = (criancasPorTorre[x.torre] || 0) + (criancasApto.get(kk(x.torre, x.apto)) || 0); });
+  const criancasTotal = Object.values(criancasPorTorre).reduce((a, b) => a + b, 0);
+  const saida = { versao: 1, atualizado, editadoEm: null, apartamentos: lista, removidos, criancasPorTorre, criancasTotal };
   const um = o => ' ' + JSON.stringify(o);
-  fs.writeFileSync(R('participantes.json'), `{"versao":1,"atualizado":${JSON.stringify(atualizado)},"editadoEm":null,\n"apartamentos":[\n${lista.map(um).join(',\n')}\n],\n"removidos":[\n${removidos.map(r => um({ torre: r.torre, apto: r.apto })).join(',\n')}\n]}\n`);
+  fs.writeFileSync(R('participantes.json'), `{"versao":1,"atualizado":${JSON.stringify(atualizado)},"editadoEm":null,\n"apartamentos":[\n${lista.map(um).join(',\n')}\n],\n"removidos":[\n${removidos.map(r => um({ torre: r.torre, apto: r.apto })).join(',\n')}\n],\n"criancasPorTorre":${JSON.stringify(criancasPorTorre)},\n"criancasTotal":${criancasTotal}}\n`);
   const admin = fs.readFileSync(R('src/admin.template.html'), 'utf8')
     .replace('/*__LIMPAR__*/', () => limparSrc).replace('__SEM_DOCES__', () => JSON.stringify(regras.semDoces)).replace('__LISTA__', () => JSON.stringify(saida))
     .replace('__DADOS__', () => '[\n' + rows.map(r => JSON.stringify(r)).join(',\n') + '\n]');

@@ -91,7 +91,7 @@ body.modal-aberto{overflow:hidden}
 <script>
 (()=>{
 const P0 = __PUBLICO__, $ = id => document.getElementById(id);
-let P = {}, T = [], sel = null;
+let P = {}, T = [], sel = null, CRI_TORRE = {}, CRI_TOTAL = 0;
 const cab = '🎃 *Coleta de Doces – Halloween 2026*\n🏢 Condomínio Monumento São Paulo\n';
 const n = q => q + (q === 1 ? ' apartamento participante' : ' apartamentos participantes');
 const num = x => String(x.apto);
@@ -99,7 +99,10 @@ const comDoces = t => P[t].filter(x=>!x.acabou);                          // men
 const bloco = t => { const l = comDoces(t); return l.length ? `*Torre ${t}* (${n(l.length)})\n${l.map(num).join(', ')}` : `*Torre ${t}*\nNenhum apartamento com doces no momento.`; };
 const todos = () => T.reduce((a,t)=>a.concat(P[t]),[]);
 const todosComDoces = () => T.reduce((a,t)=>a.concat(comDoces(t)),[]);
-const msg = t => t === '*' ? `${cab}\n✅ *${n(todosComDoces().length)}*\n\n` + T.filter(x=>comDoces(x).length).map(bloco).join('\n\n') : `${cab}\n${bloco(t)}`;
+const resumoCriancas = t => t === '*'
+  ? (T.some(x=>comDoces(x).length) ? `\n\n🧒 *Crianças por torre*\n${T.filter(x=>comDoces(x).length).map(x=>`Torre ${x}: ${CRI_TORRE[x]||0}`).join('\n')}\n\n🧒 *${CRI_TOTAL} crianças no total*` : '')
+  : (CRI_TORRE[t] !== undefined ? `\n\n🧒 *${CRI_TORRE[t]||0} crianças na torre*` : '');
+const msg = t => (t === '*' ? `${cab}\n✅ *${n(todosComDoces().length)}*\n\n` + T.filter(x=>comDoces(x).length).map(bloco).join('\n\n') : `${cab}\n${bloco(t)}`) + resumoCriancas(t);
 function mostrar(t){
   sel = t; if(t!=='*' && $('avTorre') && !$('avTorre').value) $('avTorre').value = t;
   [...$('bts').children].forEach(b=>b.classList.toggle('on',b.dataset.t===t));
@@ -111,6 +114,7 @@ function mostrar(t){
 function iniciar(d){
   P = {}; d.apartamentos.slice().sort((a,b)=>a.torre.localeCompare(b.torre)||a.apto-b.apto).forEach(x=>(P[x.torre]=P[x.torre]||[]).push(x));
   T = Object.keys(P);
+  CRI_TORRE = d.criancasPorTorre || {}; CRI_TOTAL = typeof d.criancasTotal === 'number' ? d.criancasTotal : 0;
   const dataAtualizacao = d.editadoEm || d.atualizado;
   function formatarData(valor) {
     if (!valor) return '';
