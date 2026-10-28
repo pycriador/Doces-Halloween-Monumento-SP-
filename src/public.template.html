@@ -94,11 +94,12 @@ const P0 = __PUBLICO__, $ = id => document.getElementById(id);
 let P = {}, T = [], sel = null;
 const cab = '🎃 *Coleta de Doces – Halloween 2026*\n🏢 Condomínio Monumento São Paulo\n';
 const n = q => q + (q === 1 ? ' apartamento participante' : ' apartamentos participantes');
-const num = x => x.acabou ? `~${x.apto}~` : String(x.apto);               // ~riscado~ no WhatsApp
-const bloco = t => `*Torre ${t}* (${n(P[t].length)})\n${P[t].map(num).join(', ')}`;
+const num = x => String(x.apto);
+const comDoces = t => P[t].filter(x=>!x.acabou);                          // mensagem p/ copiar: só quem ainda tem doces
+const bloco = t => { const l = comDoces(t); return l.length ? `*Torre ${t}* (${n(l.length)})\n${l.map(num).join(', ')}` : `*Torre ${t}*\nNenhum apartamento com doces no momento.`; };
 const todos = () => T.reduce((a,t)=>a.concat(P[t]),[]);
-const legenda = l => l.some(x=>x.acabou) ? '\n\n_Riscados: os doces já acabaram_' : '';
-const msg = t => t === '*' ? `${cab}\n✅ *${n(todos().length)}*\n\n` + T.map(bloco).join('\n\n') + legenda(todos()) : `${cab}\n${bloco(t)}` + legenda(P[t]);
+const todosComDoces = () => T.reduce((a,t)=>a.concat(comDoces(t)),[]);
+const msg = t => t === '*' ? `${cab}\n✅ *${n(todosComDoces().length)}*\n\n` + T.filter(x=>comDoces(x).length).map(bloco).join('\n\n') : `${cab}\n${bloco(t)}`;
 function mostrar(t){
   sel = t; if(t!=='*' && $('avTorre') && !$('avTorre').value) $('avTorre').value = t;
   [...$('bts').children].forEach(b=>b.classList.toggle('on',b.dataset.t===t));
