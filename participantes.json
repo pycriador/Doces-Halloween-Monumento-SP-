@@ -1,4 +1,4 @@
-{"versao":1,"atualizado":"28/10/2026 13:25","editadoEm":null,
+{"versao":1,"atualizado":"29/10/2026 15:49","editadoEm":null,
 "apartamentos":[
  {"torre":"A","apto":41,"acabou":false,"origem":"planilha"},
  {"torre":"A","apto":42,"acabou":true,"origem":"manual"},
@@ -10,6 +10,7 @@
  {"torre":"A","apto":152,"acabou":false,"origem":"planilha"},
  {"torre":"A","apto":203,"acabou":false,"origem":"planilha"},
  {"torre":"A","apto":213,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":214,"acabou":false,"origem":"planilha"},
  {"torre":"A","apto":231,"acabou":true,"origem":"planilha"},
  {"torre":"A","apto":242,"acabou":true,"origem":"manual"},
  {"torre":"A","apto":251,"acabou":false,"origem":"planilha"},
@@ -61,9 +62,11 @@
  {"torre":"E","apto":32,"acabou":false,"origem":"planilha"},
  {"torre":"E","apto":35,"acabou":false,"origem":"planilha"},
  {"torre":"E","apto":41,"acabou":true,"origem":"planilha"},
+ {"torre":"E","apto":65,"acabou":false,"origem":"planilha"},
  {"torre":"E","apto":104,"acabou":false,"origem":"planilha"},
  {"torre":"E","apto":115,"acabou":true,"origem":"planilha"},
  {"torre":"E","apto":142,"acabou":true,"origem":"planilha"},
+ {"torre":"E","apto":165,"acabou":false,"origem":"planilha"},
  {"torre":"E","apto":166,"acabou":false,"origem":"planilha"},
  {"torre":"E","apto":175,"acabou":false,"origem":"planilha"},
  {"torre":"E","apto":183,"acabou":false,"origem":"planilha"},
@@ -73,6 +76,7 @@
  {"torre":"E","apto":245,"acabou":false,"origem":"planilha"},
  {"torre":"E","apto":251,"acabou":false,"origem":"planilha"},
  {"torre":"E","apto":283,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":13,"acabou":false,"origem":"planilha"},
  {"torre":"F","apto":14,"acabou":false,"origem":"planilha"},
  {"torre":"F","apto":41,"acabou":false,"origem":"planilha"},
  {"torre":"F","apto":53,"acabou":false,"origem":"planilha"},
@@ -85,5 +89,5 @@
 "removidos":[
  {"torre":"C","apto":33}
 ],
-"criancasPorTorre":{"A":16,"B":28,"C":23,"D":19,"E":18,"F":30},
-"criancasTotal":134}
+"criancasPorTorre":{"A":19,"B":28,"C":23,"D":19,"E":22,"F":34},
+"criancasTotal":145}
