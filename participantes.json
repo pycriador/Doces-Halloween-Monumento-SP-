@@ -1,4 +1,4 @@
-{"versao":1,"atualizado":"30/10/2026 15:08","editadoEm":null,
+{"versao":1,"atualizado":"30/10/2026 15:35","editadoEm":null,
 "apartamentos":[
  {"torre":"A","apto":41,"acabou":false,"origem":"planilha"},
  {"torre":"A","apto":42,"acabou":true,"origem":"manual"},
@@ -25,6 +25,8 @@
  {"torre":"B","apto":125,"acabou":false,"origem":"planilha"},
  {"torre":"B","apto":144,"acabou":false,"origem":"planilha"},
  {"torre":"B","apto":162,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":166,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":168,"acabou":false,"origem":"planilha"},
  {"torre":"B","apto":193,"acabou":true,"origem":"manual"},
  {"torre":"B","apto":205,"acabou":false,"origem":"planilha"},
  {"torre":"B","apto":214,"acabou":false,"origem":"planilha"},
@@ -94,5 +96,5 @@
 "removidos":[
 
 ],
-"criancasPorTorre":{"A":18,"B":20,"C":26,"D":24,"E":21,"F":38},
-"criancasTotal":147}
+"criancasPorTorre":{"A":18,"B":22,"C":26,"D":24,"E":21,"F":38},
+"criancasTotal":149}
