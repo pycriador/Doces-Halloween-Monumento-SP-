@@ -108,7 +108,7 @@ const todosComDoces = () => T.reduce((a,t)=>a.concat(comDoces(t)),[]);
 const resumoCriancas = t => t === '*'
   ? (T.some(x=>comDoces(x).length) ? `\n\n🧒 *Crianças por torre*\n${T.filter(x=>comDoces(x).length).map(x=>`Torre ${x}: ${CRI_TORRE[x]||0}`).join('\n')}\n\n🧒 *${CRI_TOTAL} crianças no total*` : '')
   : (CRI_TORRE[t] !== undefined ? `\n\n🧒 *${CRI_TORRE[t]||0} crianças na torre*` : '');
-const lista = () => T.map(t=>{ const l = comDoces(t); return `Torre ${t}\n${l.length ? l.map(num).join(', ') : 'Nenhum apartamento com doces no momento.'}`; }).join('\n\n');
+const lista = () => T.map(t=>{ const l = comDoces(t); return `Torre ${t}\n${l.length ? l.map(num).join('\n') : 'Nenhum apartamento com doces no momento.'}`; }).join('\n\n');
 const msg = t => (t === '*' ? `${cab}\n✅ *${n(todosComDoces().length)}*\n\n` + T.filter(x=>comDoces(x).length).map(bloco).join('\n\n') : `${cab}\n${bloco(t)}`) + resumoCriancas(t);
 function mostrar(t){
   sel = t; if(t!=='*' && $('avTorre') && !$('avTorre').value) $('avTorre').value = t;
