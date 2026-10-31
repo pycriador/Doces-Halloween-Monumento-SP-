@@ -50,6 +50,12 @@ body.modal-aberto{overflow:hidden}
   <textarea id="rMsg" readonly rows="9"></textarea>
   <div class="acoes"><button class="acao" id="bCop">Copiar mensagem</button><button id="bWpp">Abrir no WhatsApp</button><span id="rOk" class="ok"></span></div>
  </section>
+ <section class="card" id="lista">
+  <h2>📋 Apartamentos participantes por torre</h2>
+  <label for="lMsg">Lista para copiar e colar</label>
+  <textarea id="lMsg" readonly rows="12"></textarea>
+  <div class="acoes"><button class="acao" id="bCopL">Copiar lista</button><span id="lOk" class="ok"></span></div>
+ </section>
  <section class="card" id="aviso">
   <h2>🍬 Os doces do seu apartamento acabaram?</h2>
   <p class="sub">Toque no botão para avisar o Willian pelo WhatsApp e tirar o seu apartamento da lista.</p>
@@ -102,6 +108,7 @@ const todosComDoces = () => T.reduce((a,t)=>a.concat(comDoces(t)),[]);
 const resumoCriancas = t => t === '*'
   ? (T.some(x=>comDoces(x).length) ? `\n\n🧒 *Crianças por torre*\n${T.filter(x=>comDoces(x).length).map(x=>`Torre ${x}: ${CRI_TORRE[x]||0}`).join('\n')}\n\n🧒 *${CRI_TOTAL} crianças no total*` : '')
   : (CRI_TORRE[t] !== undefined ? `\n\n🧒 *${CRI_TORRE[t]||0} crianças na torre*` : '');
+const lista = () => T.map(t=>{ const l = comDoces(t); return `Torre ${t}\n${l.length ? l.map(num).join(', ') : 'Nenhum apartamento com doces no momento.'}`; }).join('\n\n');
 const msg = t => (t === '*' ? `${cab}\n✅ *${n(todosComDoces().length)}*\n\n` + T.filter(x=>comDoces(x).length).map(bloco).join('\n\n') : `${cab}\n${bloco(t)}`) + resumoCriancas(t);
 function mostrar(t){
   sel = t; if(t!=='*' && $('avTorre') && !$('avTorre').value) $('avTorre').value = t;
@@ -132,6 +139,7 @@ function iniciar(d){
   $('at').textContent = formatarData(dataAtualizacao);
   if($('avTorre')){ const cur = $('avTorre').value; $('avTorre').innerHTML = '<option value="">Torre</option>' + T.map(t=>`<option>${t}</option>`).join(''); $('avTorre').value = cur; }
   $('bts').innerHTML = [...T,'*'].map(t=>`<button data-t="${t}">${t==='*'?'Todas':'Torre '+t}</button>`).join('');
+  $('lMsg').value = lista();
   if(sel && (sel==='*' || P[sel])) mostrar(sel); else { sel = null; $('res').hidden = true; }
 }
 $('bts').onclick = e => { const t = e.target.dataset && e.target.dataset.t; if(!t) return; mostrar(t); $('res').scrollIntoView({behavior:'smooth',block:'nearest'}); };
@@ -140,6 +148,10 @@ try{ fetch('participantes.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r
 $('bCop').onclick = async () => {
   try{ await navigator.clipboard.writeText($('rMsg').value); }catch(e){ $('rMsg').select(); document.execCommand('copy'); }
   $('rOk').textContent = '✔ Copiado!'; setTimeout(()=>$('rOk').textContent='',3000);
+};
+$('bCopL').onclick = async () => {
+  try{ await navigator.clipboard.writeText($('lMsg').value); }catch(e){ $('lMsg').select(); document.execCommand('copy'); }
+  $('lOk').textContent = '✔ Copiado!'; setTimeout(()=>$('lOk').textContent='',3000);
 };
 $('bWpp').onclick = () => window.open('https://wa.me/?text='+encodeURIComponent($('rMsg').value),'_blank');
 
