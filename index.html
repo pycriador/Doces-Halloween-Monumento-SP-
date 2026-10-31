@@ -20,7 +20,7 @@ button{cursor:pointer}.torres button{font-weight:700;font-size:1.05rem}
 textarea{width:100%;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;background:#150d26;color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:10px;margin:6px 0 10px}
 label{color:var(--mu);font-size:.9rem}.acoes{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .btnlink{display:block;width:100%;text-align:center;border-radius:12px;padding:12px 14px;background:var(--or);color:#1a0d00;font:inherit;font-weight:700;border:0;cursor:pointer}
-.riscado{text-decoration:line-through;opacity:.5}.ok{color:#7ddc7d}.erro{color:#ff7b7b;margin-top:10px}.rodape{text-align:center;margin-top:28px;font-size:.9rem}
+.ok{color:#7ddc7d}.erro{color:#ff7b7b;margin-top:10px}.rodape{text-align:center;margin-top:28px;font-size:.9rem}
 a{color:var(--mu)}#fLogin input[type=password],#fLogin input[type=text]{width:100%;margin-bottom:10px}
 
 .modal-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(8,4,15,.78);backdrop-filter:blur(5px)}
@@ -113,13 +113,14 @@ const msg = t => (t === '*' ? `${cab}\n✅ *${n(todosComDoces().length)}*\n\n` +
 function mostrar(t){
   sel = t; if(t!=='*' && $('avTorre') && !$('avTorre').value) $('avTorre').value = t;
   [...$('bts').children].forEach(b=>b.classList.toggle('on',b.dataset.t===t));
-  const l = t==='*' ? todos() : P[t], k = l.filter(x=>x.acabou).length;
-  $('rTit').textContent = (t==='*' ? 'Todas as torres' : `Torre ${t}`) + ` · ${n(l.length)}` + (k ? ` · ${k} sem doces` : '');
-  $('rChips').innerHTML = t==='*' ? '' : l.map(x=>`<span class="chip${x.acabou?' riscado':''}">${x.apto}</span>`).join('') + (k ? '<div class="sub" style="width:100%">Riscados: os doces já acabaram.</div>' : '');
+  const l = t==='*' ? todos() : P[t];
+  $('rTit').textContent = (t==='*' ? 'Todas as torres' : `Torre ${t}`) + ` · ${n(l.length)}`;
+  $('rChips').innerHTML = t==='*' ? '' : l.map(x=>`<span class="chip">${x.apto}</span>`).join('');
   $('rMsg').value = msg(t); $('res').hidden = false; $('rOk').textContent = '';
 }
 function iniciar(d){
-  P = {}; d.apartamentos.slice().sort((a,b)=>a.torre.localeCompare(b.torre)||a.apto-b.apto).forEach(x=>(P[x.torre]=P[x.torre]||[]).push(x));
+  P = {}; d.apartamentos.filter(x=>!x.acabou).sort(   /* sem doces: some da página pública (continua visível na Administração) */
+   (a,b)=>a.torre.localeCompare(b.torre)||a.apto-b.apto).forEach(x=>(P[x.torre]=P[x.torre]||[]).push(x));
   T = Object.keys(P);
   CRI_TORRE = d.criancasPorTorre || {}; CRI_TOTAL = typeof d.criancasTotal === 'number' ? d.criancasTotal : 0;
   const dataAtualizacao = d.editadoEm || d.atualizado;
