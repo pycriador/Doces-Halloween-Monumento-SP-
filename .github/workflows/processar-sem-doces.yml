@@ -8,6 +8,11 @@ permissions:
   contents: write
   issues: write
 
+# Mesma fila do sync da planilha: os dois gravam participantes.json e não podem rodar ao mesmo tempo.
+concurrency:
+  group: participantes-json
+  cancel-in-progress: false
+
 jobs:
   atualizar-lista:
     if: github.event.issue.user.login == 'pycriador' && startsWith(github.event.issue.title, '[SEM DOCES]')

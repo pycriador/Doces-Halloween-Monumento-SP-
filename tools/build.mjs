@@ -34,12 +34,16 @@ else if (cmd === 'build') {
   const fp = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date()), pv = k => fp.find(x => x.type === k).value;
   const atualizado = `${pv('day')}/${pv('month')}/${pv('year')} ${pv('hour')}:${pv('minute')}`;
   /* lista pública: planilha + edições manuais do participantes.json atual (acabou, manuais, removidos) */
-  const atual = arg2 && fs.existsSync(arg2) ? JSON.parse(fs.readFileSync(arg2, 'utf8')) : null, kk = (t, a) => t + '|' + a;
+  if (arg2 && !fs.existsSync(arg2)) throw new Error(`${arg2} não encontrado: sem ele as marcações "sem doces" seriam perdidas`);
+  const atual = arg2 ? JSON.parse(fs.readFileSync(arg2, 'utf8')) : null, kk = (t, a) => t + '|' + a;
   const removidos = atual ? (atual.removidos || []) : regras.semDoces.map(s => { const m = s.match(/^([A-Z]+)(\d+)$/); return { torre: m[1], apto: +m[2] }; });
   const rem = new Set(removidos.map(r => kk(r.torre, r.apto))), velha = new Map((atual?.apartamentos || []).map(x => [kk(x.torre, x.apto), x]));
   const lista = dados.filter(d => !rem.has(kk(d.torre, d.apto))).map(d => ({ torre: d.torre, apto: d.apto, acabou: !!velha.get(kk(d.torre, d.apto))?.acabou, origem: 'planilha' }));
   (atual?.apartamentos || []).filter(x => (x.origem === 'manual' || x.acabou) && !lista.some(l => l.torre === x.torre && l.apto === x.apto)).forEach(x => lista.push({ torre: x.torre, apto: x.apto, acabou: !!x.acabou, origem: 'manual' }));
   lista.sort((a, b) => a.torre.localeCompare(b.torre) || a.apto - b.apto);
+  /* trava: quem já estava "sem doces" nunca volta para a lista com doces num sync */
+  const voltaram = (atual?.apartamentos || []).filter(x => x.acabou && lista.some(l => l.torre === x.torre && l.apto === x.apto && !l.acabou));
+  if (voltaram.length) throw new Error('Sync abortado: voltariam a ter doces ' + voltaram.map(x => x.torre + x.apto).join(', '));
   /* total de crianças por torre (só quem ainda tem doces) e geral: agregado, sem expor a quantidade por apartamento */
   const criancasApto = new Map(dados.map(d => [kk(d.torre, d.apto), d.criancas]));
   const criancasPorTorre = {};
