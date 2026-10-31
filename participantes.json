@@ -1,581 +1,103 @@
-{
-  "versao": 1,
-  "atualizado": "31/10/2026, 10:47",
-  "editadoEm": "2026-10-31T13:47:36.521Z",
-  "apartamentos": [
-    {
-      "torre": "A",
-      "apto": 41,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 42,
-      "acabou": true,
-      "origem": "manual"
-    },
-    {
-      "torre": "A",
-      "apto": 44,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 61,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 112,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 113,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 122,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 152,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 203,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 213,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 214,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 231,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 242,
-      "acabou": true,
-      "origem": "manual"
-    },
-    {
-      "torre": "A",
-      "apto": 251,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 252,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 271,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "A",
-      "apto": 281,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 24,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 55,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 56,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 66,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 95,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 125,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 144,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 162,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 166,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 168,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 193,
-      "acabou": true,
-      "origem": "manual"
-    },
-    {
-      "torre": "B",
-      "apto": 205,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 214,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 241,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 274,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 284,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "B",
-      "apto": 285,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 11,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 24,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 33,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 34,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 45,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 54,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 92,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 125,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 126,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 141,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 145,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 154,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 174,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 202,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 214,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 234,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 235,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "C",
-      "apto": 236,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 16,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 35,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 41,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 43,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 54,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 96,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 115,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 165,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 176,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 185,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 195,
-      "acabou": true,
-      "origem": "manual"
-    },
-    {
-      "torre": "D",
-      "apto": 235,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "D",
-      "apto": 245,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 11,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 32,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 35,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 41,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 65,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 104,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 115,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 142,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 165,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 175,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 183,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 195,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 226,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 234,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 245,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 251,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 274,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "E",
-      "apto": 283,
-      "acabou": true,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 13,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 14,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 41,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 53,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 61,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 63,
-      "acabou": true,
-      "origem": "manual"
-    },
-    {
-      "torre": "F",
-      "apto": 91,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 144,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 153,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 241,
-      "acabou": false,
-      "origem": "planilha"
-    },
-    {
-      "torre": "F",
-      "apto": 244,
-      "acabou": true,
-      "origem": "planilha"
-    }
-  ],
-  "removidos": [],
-  "criancasPorTorre": {
-    "A": 15,
-    "B": 20,
-    "C": 27,
-    "D": 14,
-    "E": 15,
-    "F": 39
-  },
-  "criancasTotal": 130
-}
+{"versao":1,"atualizado":"31/10/2026 10:50","editadoEm":null,
+"apartamentos":[
+ {"torre":"A","apto":41,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":42,"acabou":true,"origem":"manual"},
+ {"torre":"A","apto":44,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":61,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":73,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":112,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":113,"acabou":true,"origem":"planilha"},
+ {"torre":"A","apto":122,"acabou":true,"origem":"planilha"},
+ {"torre":"A","apto":152,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":203,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":213,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":214,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":231,"acabou":true,"origem":"planilha"},
+ {"torre":"A","apto":242,"acabou":true,"origem":"manual"},
+ {"torre":"A","apto":251,"acabou":false,"origem":"planilha"},
+ {"torre":"A","apto":252,"acabou":true,"origem":"planilha"},
+ {"torre":"A","apto":271,"acabou":true,"origem":"planilha"},
+ {"torre":"A","apto":281,"acabou":true,"origem":"planilha"},
+ {"torre":"B","apto":24,"acabou":true,"origem":"planilha"},
+ {"torre":"B","apto":55,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":56,"acabou":true,"origem":"planilha"},
+ {"torre":"B","apto":66,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":95,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":125,"acabou":true,"origem":"planilha"},
+ {"torre":"B","apto":144,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":162,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":166,"acabou":true,"origem":"planilha"},
+ {"torre":"B","apto":168,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":193,"acabou":true,"origem":"manual"},
+ {"torre":"B","apto":205,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":214,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":241,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":274,"acabou":false,"origem":"planilha"},
+ {"torre":"B","apto":284,"acabou":true,"origem":"planilha"},
+ {"torre":"B","apto":285,"acabou":true,"origem":"planilha"},
+ {"torre":"C","apto":11,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":24,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":33,"acabou":true,"origem":"planilha"},
+ {"torre":"C","apto":34,"acabou":true,"origem":"planilha"},
+ {"torre":"C","apto":45,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":54,"acabou":true,"origem":"planilha"},
+ {"torre":"C","apto":92,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":125,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":126,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":141,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":145,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":154,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":174,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":202,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":214,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":234,"acabou":false,"origem":"planilha"},
+ {"torre":"C","apto":235,"acabou":true,"origem":"planilha"},
+ {"torre":"C","apto":236,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":16,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":35,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":41,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":43,"acabou":true,"origem":"planilha"},
+ {"torre":"D","apto":54,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":96,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":115,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":165,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":176,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":185,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":195,"acabou":true,"origem":"manual"},
+ {"torre":"D","apto":235,"acabou":false,"origem":"planilha"},
+ {"torre":"D","apto":245,"acabou":true,"origem":"planilha"},
+ {"torre":"E","apto":11,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":32,"acabou":true,"origem":"planilha"},
+ {"torre":"E","apto":35,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":41,"acabou":true,"origem":"planilha"},
+ {"torre":"E","apto":65,"acabou":true,"origem":"planilha"},
+ {"torre":"E","apto":104,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":115,"acabou":true,"origem":"planilha"},
+ {"torre":"E","apto":142,"acabou":true,"origem":"planilha"},
+ {"torre":"E","apto":165,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":175,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":183,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":195,"acabou":true,"origem":"planilha"},
+ {"torre":"E","apto":226,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":234,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":245,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":251,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":274,"acabou":false,"origem":"planilha"},
+ {"torre":"E","apto":283,"acabou":true,"origem":"planilha"},
+ {"torre":"F","apto":13,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":14,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":41,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":53,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":61,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":63,"acabou":true,"origem":"manual"},
+ {"torre":"F","apto":91,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":144,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":153,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":241,"acabou":false,"origem":"planilha"},
+ {"torre":"F","apto":244,"acabou":true,"origem":"planilha"}
+],
+"removidos":[
+
+],
+"criancasPorTorre":{"A":17,"B":19,"C":26,"D":14,"E":15,"F":39},
+"criancasTotal":130}
